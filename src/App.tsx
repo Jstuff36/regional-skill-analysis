@@ -1,21 +1,27 @@
 import * as React from 'react';
-import './App.css';
+import { Provider } from 'react-redux';
+import configureStore from './Frontend/Stores/index';
+import { initialState } from './Frontend/Reducers/rootReducer';
+import { Route, HashRouter } from 'react-router-dom';
+import { NavBar } from './Frontend/Components/NavBar/NavBar';
+import { LoginPage } from './Frontend/Components/LoginPage';
+import { HomePage } from './Frontend/Components/HomePage';
 
-import logo from './logo.svg';
+const store = configureStore(initialState);
 
 class App extends React.Component {
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
+      <Provider store={store}>
+        <HashRouter>
+          <>
+            <NavBar/>
+            <Route path="/login" component={LoginPage}/>
+            <Route exact={true} path="/" component={HomePage}/>
+          </>
+        </HashRouter>
+      </Provider>
+    )
   }
 }
 
