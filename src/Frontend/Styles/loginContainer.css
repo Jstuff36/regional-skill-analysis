@@ -16,6 +16,21 @@
     margin-left: 30px;
 }
 
+.loginContainer .rightSide .rightHeader {
+    padding: 10px 0 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.loginContainer .leftSide .leftItem {
+    padding: 10px 0 ;
+    font-size: 14px;
+}
+
+.loginContainer .leftSide .leftHeader {
+    font-size: 24px;
+}
+
 .loginContainer .rightSide .ui.icon.input>i.icon:not(.link) {
     pointer-events: all;
 }

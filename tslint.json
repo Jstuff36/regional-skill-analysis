@@ -15,6 +15,7 @@
     "member-access": false,
     "no-empty-interface": false,
     "jsx-no-lambda": false,
+    "object-literal-sort-keys": false,
     "member-ordering": [
       true,
       "static-before-instance"

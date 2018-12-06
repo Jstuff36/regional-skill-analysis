@@ -1,43 +1,66 @@
 import * as React from 'react';
 import '../Styles/loginContainer.css';
-import { Form, Icon } from 'semantic-ui-react';
+import { Form, Icon, InputOnChangeData } from 'semantic-ui-react';
 
 interface State {
     showPassword: boolean;
+    companyName: string;
+    email: string;
+    password: string;
 }
 
 export class LoginPage extends React.Component<{}, State> {
 
     state = {
-        showPassword: false
+        showPassword: false,
+        companyName: '',
+        email: '',
+        password: ''
     }
 
+    onCompanyNameChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ companyName: value });
+    onEmailChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ email: value });
+    onPasswordChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ password: value });
+
+    flipPasswordVisibilityState = () => this.setState(({showPassword}) => ({showPassword: !showPassword}));
+
     render() {
-        const { showPassword } = this.state;
+        const { showPassword, companyName, email, password } = this.state;
         return (
             <div className="loginContainer">
                 <div className="leftSide">
-                    <div>Large text</div>
-                    <div>some more text explianing whats going on</div>
-                    <div>some point</div>
-                    <div>another point yeyyyyyyyyy</div>
+                    <div className="leftItem leftHeader">Large text</div>
+                    <div className="leftItem">some more text explianing whats going on</div>
+                    <div className="leftItem">some point</div>
+                    <div className="leftItem">another point yeyyyyyyyyy</div>
                 </div>
                 <div className="rightSide">
-                    <div>Sign Up</div>
+                    <div className="rightHeader">Sign Up</div>
                     <Form>
-                        <Form.Input label={"Company Name"}/>
-                        <Form.Input label={"Email"} required/>
+                        <Form.Input 
+                            value={companyName} 
+                            label={"Company Name"}
+                            onChange={this.onCompanyNameChange}
+                            />
+                        <Form.Input 
+                            value={email}
+                            label={"Email"} 
+                            required
+                            onChange={this.onEmailChange}
+                            />
                         <Form.Input 
                             required
+                            value={password}
+                            onChange={this.onPasswordChange}
                             label={"Password"} 
                             type={showPassword ? "" : "password"} 
                             icon={showPassword ? 
-                                <Icon name={"eye slash"} onClick={() => this.setState({showPassword: false})}/> 
+                                <Icon name={"eye slash"} onClick={this.flipPasswordVisibilityState}/> 
                                 : 
-                                <Icon name={"eye"} onClick={() => this.setState({showPassword: true})}/>
+                                <Icon name={"eye"} onClick={this.flipPasswordVisibilityState}/>
                             } 
                         />
-                        <Form.Button content={"Sign Up"} />
+                        <Form.Button disabled={email.length === 0 || password.length === 0} content={"Sign Up"} />
                     </Form>
                 </div>
             </div>
