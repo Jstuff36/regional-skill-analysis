@@ -1,4 +1,27 @@
+.positioningContainer {
+    background-color: #24aaea;
+}
+
 .navBarContainer {
     height: 75px;
     display: flex;
+    justify-content: space-between;
+    width: 1080px;
+    margin: 0 auto;
+}
+
+.navBarContainer > .navBarName {
+    align-self: center;
+}
+
+.navBarContainer .loginOptions {
+    align-self: center;
+}
+
+.navBarContainer .ui.form.loginOptions .fields {
+    margin: 0;
+}
+
+.navBarContainer .ui.form.loginOptions .fields .field:last-child {
+    align-self: flex-end;
 }
