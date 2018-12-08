@@ -11,7 +11,7 @@ export class NavBar extends React.Component<{}, State> {
 
     state = {
         email: '',
-        password: ''
+        password: '',
     }
 
     onEmailChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ email: value });

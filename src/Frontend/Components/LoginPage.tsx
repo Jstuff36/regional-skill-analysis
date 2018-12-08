@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../Styles/loginContainer.css';
+import '../Styles/LoginPage.css';
 import { Form, Icon, InputOnChangeData } from 'semantic-ui-react';
 
 interface State {

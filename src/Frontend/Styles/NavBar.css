@@ -12,6 +12,8 @@
 
 .navBarContainer > .navBarName {
     align-self: center;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .navBarContainer .loginOptions {
