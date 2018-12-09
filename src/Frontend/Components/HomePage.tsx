@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../Styles/HomePage.css';
 import { connect } from 'react-redux';
-import { Input, InputOnChangeData, Divider, List, Checkbox, Dropdown, DropdownItemProps, DropdownProps, CheckboxProps } from 'semantic-ui-react';
+import { Input, InputOnChangeData, Divider, List, Checkbox, Dropdown, DropdownItemProps, DropdownProps, CheckboxProps, Button } from 'semantic-ui-react';
 import { StoreState } from '../Reducers/rootReducer';
 
 interface SkillCheckBoxOptions {
@@ -92,7 +92,7 @@ class HomePageComponent extends React.Component<Props, State> {
         return (
             <div className="homePageContainer">
                 <div className="leftSide">
-                    <div>Enter a Zip Code</div>
+                    <div className="header">Enter a Zip Code</div>
                     <Input 
                         className={"inputClass"}
                         placeholder={"i.e. 11222"}
@@ -101,13 +101,23 @@ class HomePageComponent extends React.Component<Props, State> {
                         onChange={this.handleZipCodeChange}
                     />
                     <Divider horizontal>Or</Divider>
-                    <div>Browse Jobs with Map</div>
-                    <div>
-                        Google Map will go here
-                    </div>
+                    <div className="header">Browse Jobs</div>
+                    {
+                        zipCode.length < 5 ?
+                            <div className="noZipCodeText">
+                                Enter a zipcode to begin browsing jobs
+                            </div>
+                            :
+                            <div>
+                                <div>
+                                    <Button attached='left'>List</Button>
+                                    <Button attached='right'>Map</Button>
+                                </div>
+                            </div>
+                    }
                 </div>  
                 <div className="rightSide">
-                    <div>Select your skills to narrow the search</div>
+                    <div className="header">Select your skills to narrow the search</div>
                     <div className={"inputClass"}>
                         <Dropdown 
                             placeholder='Search...' 
