@@ -3,6 +3,7 @@ import { Form, InputOnChangeData } from 'semantic-ui-react';
 import '../../Styles/NavBar.css';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { connect } from 'react-redux';
+import { NavBarLoggedIn } from './NavBarLoggedIn';
 
 interface State {
     email: string;
@@ -29,14 +30,7 @@ class NavBarComponent extends React.Component<StateProps, State> {
         const {email, password} = this.state;
 
         if (loggedIn) {
-            return (
-                <div className="positioningContainer">
-                    <div className="navBarContainer">
-                        <div className="navBarName">Regional Skill Analysis</div>
-                        <div>Search by </div>
-                    </div>
-                </div>
-            )
+            return <NavBarLoggedIn/>
         } else {
             return (
                 <div className="positioningContainer">

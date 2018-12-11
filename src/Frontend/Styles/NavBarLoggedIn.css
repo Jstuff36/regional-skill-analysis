@@ -1,0 +1,16 @@
+.navBarLoggedInContainer {
+    height: 75px;
+    display: flex;
+    width: 1080px;
+    margin: 0 auto;
+}
+
+.navBarLoggedInContainer .navBarName {
+    align-self: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.navBarLoggedInContainer .navBarItems {
+    align-self: center;
+}

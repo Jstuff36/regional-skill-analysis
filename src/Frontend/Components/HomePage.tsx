@@ -94,7 +94,7 @@ class HomePageComponent extends React.Component<Props, State> {
         return (
             <div className="homePageContainer">
                 <div className="leftSide">
-                    <div className="header">Enter a Zip Code</div>
+                    <div className="header">Enter a ZIP Code</div>
                     <Input 
                         className={"inputClass"}
                         placeholder={"i.e. 11222"}
@@ -103,11 +103,11 @@ class HomePageComponent extends React.Component<Props, State> {
                         onChange={this.handleZipCodeChange}
                     />
                     <Divider horizontal>Or</Divider>
-                    <div className="header">Browse Jobs</div>
+                    <div className="header">Browse Jobs in Your Area</div>
                     {
                         zipCode.length < 5 ?
                             <div className="noZipCodeText">
-                                Enter a zipcode to begin browsing jobs
+                                Enter a ZIP code to begin browsing jobs
                             </div>
                             :
                             <div>
