@@ -6,6 +6,7 @@ import { Route, HashRouter } from 'react-router-dom';
 import { NavBar } from './Frontend/Components/NavBar/NavBar';
 import { LoginPage } from './Frontend/Components/LoginPage';
 import { HomePage } from './Frontend/Components/HomePage';
+import { JobForm } from './Frontend/Components/Employer/JobForm';
 
 const store = configureStore(initialState);
 
@@ -16,8 +17,9 @@ class App extends React.Component {
         <HashRouter>
           <>
             <NavBar/>
+            <Route exact={true} path="/" component={HomePage} />
             <Route path="/login" component={LoginPage}/>
-            <Route exact={true} path="/" component={HomePage}/>
+            <Route path="/new-job" component={JobForm}/>
           </>
         </HashRouter>
       </Provider>

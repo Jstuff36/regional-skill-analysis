@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Input, InputOnChangeData, Divider, List, Checkbox, Dropdown, DropdownItemProps, DropdownProps, CheckboxProps, Button } from 'semantic-ui-react';
 import { StoreState } from '../Reducers/rootReducer';
 
-interface SkillCheckBoxOptions {
+// TODO: move this to a common place
+export interface SkillCheckBoxOptions {
     value: string;
     checked: boolean;
 }
@@ -23,6 +24,7 @@ type Props = StateProps
 
 class HomePageComponent extends React.Component<Props, State> {
 
+    // TODO: If this is not changed from the job form component then refactor checkbox/search part into own component
     static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
         if (state.skillCheckBoxOptions.length === 0 && state.dropdownOptions.length === 0) {
             const dropdownOptions: DropdownItemProps[] = props.skills.map(skill => ({
@@ -51,8 +53,8 @@ class HomePageComponent extends React.Component<Props, State> {
     handleZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ zipCode: value });
 
     handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, {value}: DropdownProps) => {
-        // Need to cast e to any here because React SUI has incorrectly typed the event
-        if (e.type === 'click' || (e as any).key === "Enter") { 
+        // Need to cast e here because React SUI has incorrectly typed the event
+        if (e.type === 'click' || (e as unknown as KeyboardEvent).key === "Enter") { 
             this.setState(({skillCheckBoxOptions: oldCheckBoxOptions}) => {
                 const newCheckBoxOptions = oldCheckBoxOptions.map(option => {
                     if (value === option.value) {
@@ -117,7 +119,7 @@ class HomePageComponent extends React.Component<Props, State> {
                     }
                 </div>  
                 <div className="rightSide">
-                    <div className="header">Select your skills to narrow the search</div>
+                    <div className="header">Select skills to narrow the search</div>
                     <div className={"inputClass"}>
                         <Dropdown 
                             placeholder='Search...' 
