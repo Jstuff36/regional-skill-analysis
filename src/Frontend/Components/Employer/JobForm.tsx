@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import '../../Styles/JobForm.css';
-import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps } from 'semantic-ui-react';
+import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps, List } from 'semantic-ui-react';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { SkillCheckBoxOptions } from '../HomePage';
-import { jobActions } from 'src/Frontend/Reducers/jobsReducer';
+import { jobActions, JobsStore } from 'src/Frontend/Reducers/jobsReducer';
 
 interface State {
     position: string;
@@ -15,6 +15,7 @@ interface State {
 
 interface StateProps {
     skills: string[];
+    jobs: JobsStore;
 }
 
 type DispatchProps = typeof jobActions;
@@ -87,58 +88,90 @@ class JobFormComponent extends React.Component<Props, State> {
         })
     }
 
+    postJob = () => {
+        const {zipCode, position, skillCheckBoxOptions} = this.state;
+        const {addJob} = this.props;
+        addJob({
+            zipCode,
+            position,
+            skills: skillCheckBoxOptions.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
+        })
+    }
+
+    renderJobForm = () => {
+        const { position, zipCode, skillCheckBoxOptions, dropdownOptions } = this.state;
+        return (
+            <Form>
+                <Form.Input
+                    label={'Position'}
+                    placeholder={'Position'}
+                    onChange={this.onPositionChange}
+                    required
+                    value={position}
+                />
+                <Form.Input
+                    label={'ZIP Code'}
+                    placeholder={'ZIP Code'}
+                    onChange={this.onZipCodeChange}
+                    required
+                    value={zipCode}
+                />
+                <Form.Field>
+                    <label>Select Required Skills</label>
+                    <Form.Dropdown
+                        required
+                        labeled
+                        placeholder={'Search...'}
+                        fluid
+                        search
+                        selection
+                        options={dropdownOptions}
+                        onChange={this.handleSearchSelect}
+                    />
+                    {
+                        skillCheckBoxOptions.map(({ value, checked }) => (
+                            <Form.Checkbox
+                                checked={checked}
+                                label={value}
+                                onClick={this.handleCheckBoxSelection}
+                            />
+                        ))
+                    }
+                </Form.Field>
+                <Form.Button content={'Post Job'} onClick={this.postJob}/>
+            </Form>
+        )
+    }
+
+    renderJobPosting = () => {
+        const { jobs } = this.props;
+        if (Object.keys(jobs).length > 0) {
+            return(
+                <List>
+                    {
+                        Object.keys(jobs).map(jobID => (
+                            <List.Item>
+                                {jobs[jobID].position}
+                            </List.Item>
+                        ))
+                    }
+                </List>
+            )
+        } else {
+            return <div>No Jobs Posted</div>;
+        }
+    }
+
     render() {
-
-        const {position, zipCode, skillCheckBoxOptions, dropdownOptions} = this.state;
-
         return (
             <div className="jobFormContainer">
                 <div className="leftSide">
                     <div className="header">Create A Job Posting</div>
-                    <Form>
-                        <Form.Input
-                            label={'Position'}
-                            placeholder={'Position'}
-                            onChange={this.onPositionChange}
-                            required
-                            value={position}
-                        />
-                        <Form.Input
-                            label={'ZIP Code'}
-                            placeholder={'ZIP Code'}
-                            onChange={this.onZipCodeChange}
-                            required
-                            value={zipCode}
-                        />
-                        <Form.Field>
-                            <label>Select Required Skills</label>
-                            <Form.Dropdown
-                                required
-                                labeled
-                                placeholder={'Search...'}
-                                fluid
-                                search
-                                selection
-                                options={dropdownOptions}
-                                onChange={this.handleSearchSelect}
-                            />
-                            {
-                                skillCheckBoxOptions.map(({ value, checked }) => (
-                                    <Form.Checkbox
-                                        checked={checked}
-                                        label={value}
-                                        onClick={this.handleCheckBoxSelection}
-                                    />
-                                ))
-                            }
-                        </Form.Field>
-                        <Form.Button content={'Post Job'}/>
-                    </Form>
+                    {this.renderJobForm()}
                 </div>
                 <div className="rightSide">
-                    <div className="header">
-                        Current Job Postings
-                    </div>
+                    <div className="header">Current Job Postings</div>
+                    {this.renderJobPosting()}
                 </div>
             </div>
         )
@@ -146,9 +179,11 @@ class JobFormComponent extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (store: StoreState): StateProps => {
+    const {jobsStore} = store;
     return {
+        jobs: jobsStore,
         skills: ['CNC Programming', 'CAD', '3D Printing', 'Teamwork', 'Problem Solving', 'Design']
     }
 }
 
-export const JobForm = connect(mapStateToProps)(JobFormComponent)
+export const JobForm = connect<StateProps, DispatchProps>(mapStateToProps, jobActions)(JobFormComponent)

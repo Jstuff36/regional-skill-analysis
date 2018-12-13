@@ -22,11 +22,11 @@ interface AddJobAction extends Action<Job> {
 
 const addJob = createAction<Job>(AddJob);
 
+export type AddJobActions = AddJobAction;
+
 export const jobActions = {
     addJob
 }
-
-export type AddJobActions = AddJobAction;
 
 export default function jobsReducer(state: JobsStore = jobsInitialState, action: AddJobActions) {
     switch(action.type) {

@@ -10,7 +10,7 @@ export const initialState: StoreState = {
 };
 
 const reducers = {
-    jobsReducer: jobsReducer
+    jobsStore: jobsReducer
 };
 
 const rootReducer = combineReducers(reducers);
