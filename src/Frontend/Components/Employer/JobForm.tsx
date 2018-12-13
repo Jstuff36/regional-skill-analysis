@@ -4,6 +4,7 @@ import '../../Styles/JobForm.css';
 import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps } from 'semantic-ui-react';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { SkillCheckBoxOptions } from '../HomePage';
+import { jobActions } from 'src/Frontend/Reducers/jobsReducer';
 
 interface State {
     position: string;
@@ -16,7 +17,9 @@ interface StateProps {
     skills: string[];
 }
 
-type Props = StateProps;
+type DispatchProps = typeof jobActions;
+
+type Props = StateProps & DispatchProps;
 
 class JobFormComponent extends React.Component<Props, State> {
 
