@@ -98,6 +98,11 @@ class JobFormComponent extends React.Component<Props, State> {
         })
     }
 
+    isButtonDisabled = (): boolean => {
+        const {position, zipCode} = this.state;
+        return (position.length === 0 || zipCode.length < 5)
+    }
+
     renderJobForm = () => {
         const { position, zipCode, skillCheckBoxOptions, dropdownOptions } = this.state;
         return (
@@ -138,7 +143,11 @@ class JobFormComponent extends React.Component<Props, State> {
                         ))
                     }
                 </Form.Field>
-                <Form.Button content={'Post Job'} onClick={this.postJob}/>
+                <Form.Button 
+                    disabled={this.isButtonDisabled()}
+                    content={'Post Job'} 
+                    onClick={this.postJob}
+                />
             </Form>
         )
     }
