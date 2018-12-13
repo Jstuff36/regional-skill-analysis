@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import '../../Styles/JobForm.css';
-import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps, List } from 'semantic-ui-react';
+import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps, List, Icon } from 'semantic-ui-react';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { SkillCheckBoxOptions } from '../HomePage';
 import { jobActions, JobsStore } from 'src/Frontend/Reducers/jobsReducer';
@@ -144,13 +144,14 @@ class JobFormComponent extends React.Component<Props, State> {
     }
 
     renderJobPosting = () => {
-        const { jobs } = this.props;
+        const { jobs, removeJob } = this.props;
         if (Object.keys(jobs).length > 0) {
             return(
                 <List>
                     {
                         Object.keys(jobs).map(jobID => (
-                            <List.Item>
+                            <List.Item className="jobPosting">
+                                <Icon name="delete" onClick={() => removeJob({ id: jobID })} color={"red"} />
                                 {jobs[jobID].position}
                             </List.Item>
                         ))

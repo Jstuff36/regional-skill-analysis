@@ -8,7 +8,7 @@ interface Job {
 }
 
 export interface JobsStore {
-    [id: number]: Job;
+    [id: string]: Job;
 }
 
 export const jobsInitialState: JobsStore = {}
@@ -22,10 +22,20 @@ interface AddJobAction extends Action<Job> {
 
 const addJob = createAction<Job>(AddJob);
 
-export type AddJobActions = AddJobAction;
+type RemoveJob = 'removeJob';
+const RemoveJob: RemoveJob = 'removeJob';
+
+interface RemoveJobAction extends Action<{id: string}> {
+    type: RemoveJob
+}
+
+const removeJob = createAction<{id: string}>(RemoveJob);
+
+export type AddJobActions = AddJobAction | RemoveJobAction;
 
 export const jobActions = {
-    addJob
+    addJob,
+    removeJob
 }
 
 export default function jobsReducer(state: JobsStore = jobsInitialState, action: AddJobActions) {
@@ -35,6 +45,10 @@ export default function jobsReducer(state: JobsStore = jobsInitialState, action:
                 ...state,
                 [uuidv1()]: action.payload
             }
+        case RemoveJob:
+            const { id } = action.payload!;
+            const { [id]: _, ...withJobRemoved } = state;
+            return withJobRemoved;  
         default:
             return state;
     }
