@@ -7,6 +7,7 @@ import { NavBar } from './Frontend/Components/NavBar/NavBar';
 import { LoginPage } from './Frontend/Components/LoginPage';
 import { HomePage } from './Frontend/Components/HomePage';
 import { JobForm } from './Frontend/Components/Employer/JobForm';
+import { JobDrilldown } from './Frontend/Components/Job/JobDrilldown';
 
 const store = configureStore(initialState);
 
@@ -20,6 +21,7 @@ class App extends React.Component {
             <Route exact={true} path="/" component={HomePage} />
             <Route path="/login" component={LoginPage}/>
             <Route path="/new-job" component={JobForm}/>
+            <Route path="/job/:id" component={JobDrilldown}/>
           </>
         </HashRouter>
       </Provider>

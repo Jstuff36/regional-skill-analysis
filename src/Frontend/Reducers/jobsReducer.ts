@@ -1,7 +1,7 @@
 import { createAction, Action } from 'redux-actions';
 const uuidv1 = require('uuid/v1');
 
-interface Job {
+export interface Job {
     position: string;
     zipCode: string;
     skills: string[];

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Input, InputOnChangeData, Divider, List, Checkbox, Dropdown, DropdownItemProps, DropdownProps, CheckboxProps, Button } from 'semantic-ui-react';
 import { StoreState } from '../Reducers/rootReducer';
 import { JobsStore } from '../Reducers/jobsReducer';
+import { Link } from 'react-router-dom';
 
 // TODO: move this to a common place
 export interface SkillCheckBoxOptions {
@@ -123,7 +124,9 @@ class HomePageComponent extends React.Component<Props, State> {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button style={{height: 40}} content={"View Job"}/>
+                                            <Link to={`/job/${id}`}>
+                                                <Button style={{height: 40}} content={"View Job"}/>
+                                            </Link>
                                         </div>
                                     </List.Item>
                                 </List>
