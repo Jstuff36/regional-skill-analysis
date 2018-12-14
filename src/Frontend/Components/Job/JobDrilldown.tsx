@@ -1,24 +1,46 @@
 import * as React from 'react';
 import { Job } from 'src/Frontend/Reducers/jobsReducer';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { StoreState } from 'src/Frontend/Reducers/rootReducer';
+import { connect } from 'react-redux';
+import { Icon } from 'semantic-ui-react';
 
-
-interface OwnProps {
-    job: Job
+interface StateProps {
+    job: Job;
 }
 
-
-
-type Props = OwnProps & RouteComponentProps<{id: string}>
+type Props = StateProps & RouteComponentProps<{id: string}, {}, {skillMatches: string[]}>
 
 class JobDrilldownComponent extends React.Component<Props> {
+
     render() {
+
+        const { job, location: {state: {skillMatches}} } = this.props;
+
         return (
             <div>
-                id: {this.props.match.params.id}
+                <div>{job.position}</div>
+                <div>Skills In Common</div>
+                {
+                    skillMatches.map(skill => (
+                        <div>
+                            <Icon name="checkmark" color="green"/>
+                            <div>skill</div>
+                        </div>
+                    ))
+                }
+                <div>Skills Missing</div>
             </div>
         )
     }
 }
 
-export const JobDrilldown = withRouter(JobDrilldownComponent)
+const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<{id: string}>): StateProps => {
+    const {jobsStore} = state;
+    const {match: {params: {id}}} = ownProps;
+    return {
+        job: jobsStore[id]
+    }
+}
+
+export const JobDrilldown = withRouter(connect<StateProps>(mapStateToProps)(JobDrilldownComponent))

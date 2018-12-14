@@ -124,7 +124,12 @@ class HomePageComponent extends React.Component<Props, State> {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Link to={`/job/${id}`}>
+                                            <Link 
+                                                to={{
+                                                    pathname: `/job/${id}`,
+                                                    state: {skillMatches}
+                                                }}
+                                            >
                                                 <Button style={{height: 40}} content={"View Job"}/>
                                             </Link>
                                         </div>
