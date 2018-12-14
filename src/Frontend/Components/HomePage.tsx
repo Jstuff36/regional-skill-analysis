@@ -3,6 +3,7 @@ import '../Styles/HomePage.css';
 import { connect } from 'react-redux';
 import { Input, InputOnChangeData, Divider, List, Checkbox, Dropdown, DropdownItemProps, DropdownProps, CheckboxProps, Button } from 'semantic-ui-react';
 import { StoreState } from '../Reducers/rootReducer';
+import { JobsStore } from '../Reducers/jobsReducer';
 
 // TODO: move this to a common place
 export interface SkillCheckBoxOptions {
@@ -18,6 +19,7 @@ interface State {
 
 interface StateProps {
     skills: string[];
+    jobs: JobsStore;
 }
 
 type Props = StateProps
@@ -87,6 +89,45 @@ class HomePageComponent extends React.Component<Props, State> {
         })
     }
 
+    renderJobOptions = () => {
+        const {zipCode, skillCheckBoxOptions} = this.state;
+        const {jobs} = this.props;
+        
+        const jobIdMatches = Object.keys(jobs).filter(id => jobs[id].zipCode === zipCode);
+        const checkedSkills = skillCheckBoxOptions.filter(({checked}) => checked);
+
+        if (jobIdMatches.length > 0) {
+            return (
+                <div>
+                    {
+                        jobIdMatches.map(id => {
+                            const skillMatches = checkedSkills.filter(
+                                ({value}) => jobs[id].skills.find(jobSkill => jobSkill === value)
+                            );
+                            const numSkillMatches = skillMatches.length;
+                            const numSkillsMissing = Math.max(jobs[id].skills.length - numSkillMatches, 0);
+                            return (
+                                <div key={id}>
+                                    <div>
+                                        {jobs[id].position}
+                                    </div>
+                                    <div>
+                                        {`${numSkillMatches} skills in common`}
+                                        {`${numSkillsMissing} missing skills`}
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            )
+        } else {
+            return (
+                <div>There are no job postings in your ZIPcode</div>
+            )
+        }
+    }
+
     render() {
 
         const {dropdownOptions, skillCheckBoxOptions, zipCode} = this.state;
@@ -115,6 +156,7 @@ class HomePageComponent extends React.Component<Props, State> {
                                     <Button attached='left'>List</Button>
                                     <Button attached='right'>Map</Button>
                                 </div>
+                                {this.renderJobOptions()}                                
                             </div>
                     }
                 </div>  
@@ -150,7 +192,10 @@ class HomePageComponent extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (store: StoreState): StateProps => {
+    const {jobsStore} = store;
+    // TODO move skills into a reducer later
     return {
+        jobs: jobsStore,
         skills: ['CNC Programming', 'CAD', '3D Printing', 'Teamwork', 'Problem Solving', 'Design']
     }
 }
