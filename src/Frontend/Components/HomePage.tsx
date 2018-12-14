@@ -98,7 +98,7 @@ class HomePageComponent extends React.Component<Props, State> {
 
         if (jobIdMatches.length > 0) {
             return (
-                <div>
+                <div className="jobsContainer">
                     {
                         jobIdMatches.map(id => {
                             const skillMatches = checkedSkills.filter(
@@ -107,15 +107,26 @@ class HomePageComponent extends React.Component<Props, State> {
                             const numSkillMatches = skillMatches.length;
                             const numSkillsMissing = Math.max(jobs[id].skills.length - numSkillMatches, 0);
                             return (
-                                <div key={id}>
-                                    <div>
-                                        {jobs[id].position}
-                                    </div>
-                                    <div>
-                                        {`${numSkillMatches} skills in common`}
-                                        {`${numSkillsMissing} missing skills`}
-                                    </div>
-                                </div>
+                                <List key={id}>
+                                    <List.Item>
+                                        <div className={"singleJobContainer"}>
+                                            <div>
+                                                <div className="jobTitle">
+                                                    {jobs[id].position}
+                                                </div>
+                                                <div className="skillsSummary">
+                                                    <div>
+                                                        {`${numSkillMatches} skills in common`}
+                                                    </div>
+                                                    <div>
+                                                        {`${numSkillsMissing} missing skills`}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <Button style={{height: 40}} content={"View Job"}/>
+                                        </div>
+                                    </List.Item>
+                                </List>
                             )
                         })
                     }
@@ -143,21 +154,22 @@ class HomePageComponent extends React.Component<Props, State> {
                         value={zipCode}
                         onChange={this.handleZipCodeChange}
                     />
-                    <Divider horizontal>Or</Divider>
-                    <div className="header">Browse Jobs in Your Area</div>
+                    <Divider horizontal>Then</Divider>
+                    <div className="header jobsHeaderContainer">
+                        <div>Browse Jobs in Your Area</div>
+                        <div>
+                            <Button disabled={zipCode.length < 5} attached='left'>List</Button>
+                            <Button disabled={zipCode.length < 5} attached='right'>Map</Button>
+                        </div>
+                    </div>
+
                     {
                         zipCode.length < 5 ?
                             <div className="noZipCodeText">
                                 Enter a ZIP code to begin browsing jobs
                             </div>
                             :
-                            <div>
-                                <div>
-                                    <Button attached='left'>List</Button>
-                                    <Button attached='right'>Map</Button>
-                                </div>
-                                {this.renderJobOptions()}                                
-                            </div>
+                            this.renderJobOptions()
                     }
                 </div>  
                 <div className="rightSide">
@@ -174,8 +186,8 @@ class HomePageComponent extends React.Component<Props, State> {
                     </div>
                     <List>
                         {
-                            skillCheckBoxOptions.map(({value, checked}) => (
-                                <List.Item>
+                            skillCheckBoxOptions.map(({value, checked}, idx) => (
+                                <List.Item key={idx}>
                                     <Checkbox 
                                         checked={checked} 
                                         label={value}

@@ -26,3 +26,27 @@
 .homePageContainer .header {
     font-size: 24px;
 }
+
+.homePageContainer .jobsHeaderContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.homePageContainer .jobsContainer {
+    padding: 15px 0;
+}
+
+.homePageContainer .jobTitle {
+    font-size: 15px;
+}
+
+.homePageContainer .skillsSummary {
+    padding: 5px 0 0 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.homePageContainer .singleJobContainer {
+    display: flex;
+    justify-content: space-between
+}

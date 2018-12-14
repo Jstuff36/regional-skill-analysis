@@ -134,8 +134,9 @@ class JobFormComponent extends React.Component<Props, State> {
                         onChange={this.handleSearchSelect}
                     />
                     {
-                        skillCheckBoxOptions.map(({ value, checked }) => (
+                        skillCheckBoxOptions.map(({ value, checked }, idx) => (
                             <Form.Checkbox
+                                key={idx}
                                 checked={checked}
                                 label={value}
                                 onClick={this.handleCheckBoxSelection}

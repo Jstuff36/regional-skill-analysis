@@ -11,7 +11,18 @@ export interface JobsStore {
     [id: string]: Job;
 }
 
-export const jobsInitialState: JobsStore = {}
+export const jobsInitialState: JobsStore = {
+    '12321': {
+        position: 'CNC Programmer',
+        zipCode: '11111',
+        skills: ['CNC Programming', 'CAD', '3D Printing']
+    },
+    '11111': {
+        position: 'Professional Paint Watcher',
+        zipCode: '11111',
+        skills: ['CNC Programming', 'Some random skill']
+    }
+}
 
 type AddJob = 'addJob';
 const AddJob: AddJob = 'addJob';
