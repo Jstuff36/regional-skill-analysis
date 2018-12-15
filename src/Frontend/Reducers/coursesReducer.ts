@@ -42,10 +42,11 @@ export default function coursesReducer(state: CoursesStore = coursesInitialState
     switch (action.type) {
         case AddCourse: {
             const {course} = action.payload!;
+            const currentCourses = state[course.zipCode] || [];
             return {
                 ...state,
                 [course.zipCode]: [
-                    // ...(state[course.zipCode]),
+                    ...currentCourses,
                     course
                 ]
                 
