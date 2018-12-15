@@ -1,0 +1,12 @@
+.jobDrillDownContainer {
+    width: 1080px;
+    margin: 20px auto;
+}
+
+.jobDrillDownContainer .title {
+    font-size: 24px;
+}
+
+.jobDrillDownContainer .skillContainer {
+    display: flex;
+}

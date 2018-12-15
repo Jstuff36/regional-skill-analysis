@@ -5,6 +5,7 @@ export interface Job {
     position: string;
     zipCode: string;
     skills: string[];
+    description?: string;
 }
 
 export interface JobsStore {
@@ -15,12 +16,14 @@ export const jobsInitialState: JobsStore = {
     '12321': {
         position: 'CNC Programmer',
         zipCode: '11111',
-        skills: ['CNC Programming', 'CAD', '3D Printing']
+        skills: ['CNC Programming', 'CAD', '3D Printing'],
+        description: "A long winded explanation of some random job woopie...blah blah blah blah balh balha blah blah"
     },
     '11111': {
         position: 'Professional Paint Watcher',
         zipCode: '11111',
-        skills: ['CNC Programming', 'Some random skill']
+        skills: ['CNC Programming', 'Some random skill'],
+        description: "A long winded explanation of some random job woopie...blah blah blah blah balh balha blah blah"
     }
 }
 
