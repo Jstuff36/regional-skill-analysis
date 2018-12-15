@@ -2,18 +2,24 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Course, coursesActions } from 'src/Frontend/Reducers/coursesReducer';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
-import { List, Icon, Form, InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
+import { List, Icon, Form, InputOnChangeData, TextAreaProps, DropdownItemProps, SemanticShorthandItem } from 'semantic-ui-react';
 import '../../Styles/CourseForm.css';
+import { SkillSearchSelection } from './SkillSearchSelection';
+import { SkillCheckBoxOptions } from '../HomePage';
+import { HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
 const uuidv1 = require('uuid/v1');
 
 interface StateProps {
-    courses: Course[]
+    courses: Course[];
+    skills: string[];
 }
 
 interface State {
     name: string;
     description: string;
     zipCode: string;
+    skillCheckBoxOptions: SkillCheckBoxOptions[];
+    dropdownOptions: DropdownItemProps[];
 }
 
 type DispatchProps = typeof coursesActions;
@@ -22,10 +28,31 @@ type Props = StateProps & DispatchProps;
 
 class CourseFormComponent extends React.Component<Props, State> {
 
+    static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
+        if (state.skillCheckBoxOptions.length === 0 && state.dropdownOptions.length === 0) {
+            const dropdownOptions: DropdownItemProps[] = props.skills.map(skill => ({
+                key: skill,
+                text: skill,
+                value: skill
+            }))
+            const skillCheckBoxOptions: SkillCheckBoxOptions[] = props.skills.map(skill => ({
+                value: skill,
+                checked: false
+            }))
+            return {
+                dropdownOptions,
+                skillCheckBoxOptions
+            }
+        }
+        return {};
+    }
+
     state: State = {
         name: '',
         description: '',
-        zipCode: ''
+        zipCode: '',
+        skillCheckBoxOptions: [],
+        dropdownOptions: []
     }
 
     removeCourse = (course: Course) => {
@@ -44,18 +71,54 @@ class CourseFormComponent extends React.Component<Props, State> {
 
     postCourse = () => {
         const {addCourse} = this.props;
-        const {name, description, zipCode} = this.state;
+        const {name, description, zipCode, skillCheckBoxOptions} = this.state;
         const course: Course = {
             name,
             zipCode,
             description,
-            id: uuidv1()
+            id: uuidv1(),
+            skills: skillCheckBoxOptions.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
         }
         addCourse({course});
     }
 
+    handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, value: string) => {
+        // Need to cast e here because React SUI has incorrectly typed the event
+        if (e.type === 'click' || (e as unknown as KeyboardEvent).key === "Enter") {
+            this.setState(({ skillCheckBoxOptions: oldCheckBoxOptions }) => {
+                const newCheckBoxOptions = oldCheckBoxOptions.map(option => {
+                    if (value === option.value) {
+                        return {
+                            ...option,
+                            checked: true
+                        }
+                    } else {
+                        return option;
+                    }
+                })
+                return { skillCheckBoxOptions: newCheckBoxOptions }
+            })
+        }
+    }
+
+    handleCheckBoxSelection = (_: React.MouseEvent<HTMLInputElement>, label: SemanticShorthandItem<HtmlLabelProps>) => {
+        this.setState(({ skillCheckBoxOptions: oldCheckBoxOptions }) => {
+            const newCheckBoxOptions = oldCheckBoxOptions.map(option => {
+                if (label === option.value) {
+                    return {
+                        ...option,
+                        checked: !option.checked
+                    }
+                } else {
+                    return option;
+                }
+            })
+            return { skillCheckBoxOptions: newCheckBoxOptions }
+        })
+    }
+
     renderCourseForm = () => {
-        const {description, name, zipCode} = this.state;
+        const {description, name, zipCode, skillCheckBoxOptions, dropdownOptions} = this.state;
         return (
             <Form>
                 <Form.Input
@@ -78,6 +141,12 @@ class CourseFormComponent extends React.Component<Props, State> {
                     onChange={this.onDescriptionChange}
                     rows={5}
                     value={description}
+                />
+                <SkillSearchSelection
+                    skillCheckBoxOptions={skillCheckBoxOptions}
+                    dropdownOptions={dropdownOptions}
+                    onCheckboxUpdate={this.handleCheckBoxSelection}
+                    onSearchUpdate={this.handleSearchSelect}
                 />
                 <Form.Button
                     disabled={this.isButtonDisabled()}
@@ -130,7 +199,8 @@ const mapStateToProps = (store: StoreState): StateProps => {
     const {coursesStore} = store;
     // Change the array idx later
     return {
-        courses: coursesStore['']
+        courses: coursesStore[''],
+        skills: ['CNC Programming', 'CAD', '3D Printing', 'Teamwork', 'Problem Solving', 'Design']
     }
 }
 

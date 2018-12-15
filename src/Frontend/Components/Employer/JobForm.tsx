@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import '../../Styles/JobForm.css';
-import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps, List, Icon, TextAreaProps } from 'semantic-ui-react';
+import { Form, InputOnChangeData, DropdownItemProps, List, Icon, TextAreaProps } from 'semantic-ui-react';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { SkillCheckBoxOptions } from '../HomePage';
 import { jobActions, JobsStore } from 'src/Frontend/Reducers/jobsReducer';
+import { SkillSearchSelection } from './SkillSearchSelection';
+import { SemanticShorthandItem, HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
 
 interface State {
     position: string;
     zipCode: string;
+    jobDescription: string;
     skillCheckBoxOptions: SkillCheckBoxOptions[];
     dropdownOptions: DropdownItemProps[];
-    jobDescription: string;
 }
 
 interface StateProps {
@@ -56,7 +58,7 @@ class JobFormComponent extends React.Component<Props, State> {
     onZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ zipCode: value });
     onJobDescriptionChange = (_: React.FormEvent<HTMLTextAreaElement>, { value }: TextAreaProps) => this.setState({ jobDescription: value as string });
 
-    handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, { value }: DropdownProps) => {
+    handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, value: string) => {
         // Need to cast e here because React SUI has incorrectly typed the event
         if (e.type === 'click' || (e as unknown as KeyboardEvent).key === "Enter") {
             this.setState(({ skillCheckBoxOptions: oldCheckBoxOptions }) => {
@@ -75,7 +77,7 @@ class JobFormComponent extends React.Component<Props, State> {
         }
     }
 
-    handleCheckBoxSelection = (_: React.MouseEvent<HTMLInputElement>, { label }: CheckboxProps) => {
+    handleCheckBoxSelection = (_: React.MouseEvent<HTMLInputElement>, label: SemanticShorthandItem<HtmlLabelProps>) => {
         this.setState(({ skillCheckBoxOptions: oldCheckBoxOptions }) => {
             const newCheckBoxOptions = oldCheckBoxOptions.map(option => {
                 if (label === option.value) {
@@ -131,29 +133,12 @@ class JobFormComponent extends React.Component<Props, State> {
                     rows={5}
                     value={jobDescription}
                 />
-                <Form.Field>
-                    <label>Select Required Skills</label>
-                    <Form.Dropdown
-                        required
-                        labeled
-                        placeholder={'Search...'}
-                        fluid
-                        search
-                        selection
-                        options={dropdownOptions}
-                        onChange={this.handleSearchSelect}
-                    />
-                    {
-                        skillCheckBoxOptions.map(({ value, checked }, idx) => (
-                            <Form.Checkbox
-                                key={idx}
-                                checked={checked}
-                                label={value}
-                                onClick={this.handleCheckBoxSelection}
-                            />
-                        ))
-                    }
-                </Form.Field>
+                <SkillSearchSelection
+                    skillCheckBoxOptions={skillCheckBoxOptions}
+                    dropdownOptions={dropdownOptions}
+                    onCheckboxUpdate={this.handleCheckBoxSelection}
+                    onSearchUpdate={this.handleSearchSelect}
+                />
                 <Form.Button 
                     disabled={this.isButtonDisabled()}
                     content={'Post Job'} 
@@ -170,7 +155,7 @@ class JobFormComponent extends React.Component<Props, State> {
                 <List>
                     {
                         Object.keys(jobs).map(jobID => (
-                            <List.Item className="jobPosting">
+                            <List.Item key={jobID} className="jobPosting">
                                 <Icon name="delete" onClick={() => removeJob({ id: jobID })} color={"red"} />
                                 <List.Content>
                                     {jobs[jobID].position}

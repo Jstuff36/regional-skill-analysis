@@ -5,9 +5,11 @@ import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { connect } from 'react-redux';
 import { Icon, List, Divider } from 'semantic-ui-react';
 import '../../Styles/JobDrillDown.css';
+import { Course } from 'src/Frontend/Reducers/coursesReducer';
 
 interface StateProps {
     job: Job;
+    courses: Course[];
 }
 
 type Props = StateProps & RouteComponentProps<{id: string}, {}, {skillMatches: string[]}>
@@ -28,8 +30,8 @@ class JobDrilldownComponent extends React.Component<Props> {
                             <div className="title">Skills In Common</div>
                             <List>
                                 {
-                                    skillMatches.map(skill => (
-                                        <List.Item>
+                                    skillMatches.map((skill, idx) => (
+                                        <List.Item key={idx}>
                                             <Icon name="checkmark" color="green" />
                                             <List.Content className="skillContainer">
                                                 <div>{skill}</div>
@@ -48,8 +50,8 @@ class JobDrilldownComponent extends React.Component<Props> {
                             <div className="title">Skills Needed to Apply</div>
                             <List>
                                 {
-                                    skillsMissing.map(skill => (
-                                        <List.Item>
+                                    skillsMissing.map((skill, idx) => (
+                                        <List.Item key={idx}>
                                             <Icon name="delete" color="red" />
                                             <List.Content className="skillContainer">
                                                 {skill}
@@ -83,10 +85,12 @@ class JobDrilldownComponent extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<{id: string}>): StateProps => {
-    const {jobsStore} = state;
+    const {jobsStore, coursesStore} = state;
     const {match: {params: {id}}} = ownProps;
+    const job = jobsStore[id]
     return {
-        job: jobsStore[id]
+        job,
+        courses: coursesStore[job.zipCode]
     }
 }
 

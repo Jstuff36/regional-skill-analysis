@@ -5,6 +5,7 @@ export interface Course {
     zipCode: string;
     description?: string;
     id: string;
+    skills: string[];
 }
 
 export interface CoursesStore {
