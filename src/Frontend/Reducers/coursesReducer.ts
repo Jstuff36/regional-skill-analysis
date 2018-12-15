@@ -1,5 +1,4 @@
 import { createAction, Action } from 'redux-actions';
-const uuidv1 = require('uuid/v1');
 
 export interface Course {
     name: string;
@@ -8,7 +7,7 @@ export interface Course {
     id: string;
 }
 
-export interface CourseStore {
+export interface CoursesStore {
     [zipCode: string]: Course[];
 }
 
@@ -30,19 +29,23 @@ interface RemoveCourseAction extends Action<{ course: Course }> {
 
 export const removeCourse = createAction<{ course: Course }>(RemoveCourse);
 
-export type CourseActions = AddCourseAction | RemoveCourseAction;
+export type CoursesActions = AddCourseAction | RemoveCourseAction;
 
+export const coursesActions = {
+    addCourse,
+    removeCourse
+}
 
-export const courseInitialState = {}
+export const coursesInitialState = {}
 
-export default function courseReducer(state: CourseStore = courseInitialState, action: CourseActions) {
+export default function coursesReducer(state: CoursesStore = coursesInitialState, action: CoursesActions) {
     switch (action.type) {
         case AddCourse: {
             const {course} = action.payload!;
             return {
                 ...state,
                 [course.zipCode]: [
-                    ...(state[course.zipCode]),
+                    // ...(state[course.zipCode]),
                     course
                 ]
                 

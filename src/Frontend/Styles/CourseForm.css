@@ -1,0 +1,20 @@
+.courseFormContainer {
+    width: 1080px;
+    margin: 20px auto;
+    display: flex;
+}
+
+.courseFormContainer .leftSide {
+    width: 50%;
+    padding-right: 30px;
+}
+
+.courseFormContainer .rightSide {
+    width: 50%;
+    padding-left: 30px;
+}
+
+.courseFormContainer .header {
+    font-size: 24px;
+    padding: 10px 0;
+}
