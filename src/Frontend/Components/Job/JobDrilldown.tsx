@@ -15,7 +15,7 @@ class JobDrilldownComponent extends React.Component<Props> {
 
     render() {
 
-        const { job, location: {state: {skillMatches}} } = this.props;
+        const { job, location: {state: {skillMatches = []}} } = this.props;
 
         return (
             <div>

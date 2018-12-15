@@ -107,6 +107,7 @@ class HomePageComponent extends React.Component<Props, State> {
                             );
                             const numSkillMatches = skillMatches.length;
                             const numSkillsMissing = Math.max(jobs[id].skills.length - numSkillMatches, 0);
+                            
                             return (
                                 <List key={id}>
                                     <List.Item>
@@ -127,7 +128,7 @@ class HomePageComponent extends React.Component<Props, State> {
                                             <Link 
                                                 to={{
                                                     pathname: `/job/${id}`,
-                                                    state: {skillMatches}
+                                                    state: {skillMatches: skillMatches.map(({ value }) => value)}
                                                 }}
                                             >
                                                 <Button style={{height: 40}} content={"View Job"}/>
