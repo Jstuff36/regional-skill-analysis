@@ -17,7 +17,7 @@ class NavBarLoggedInComponent extends React.Component<Props> {
                             <Link className="link" to={'/new-job'}>Post A Job</Link>
                         </List.Item>
                         <List.Item>
-                            <Link className="link" to={'/new-education'}>Post A Class</Link>
+                            <Link className="link" to={'/new-course'}>Post A Course</Link>
                         </List.Item>
                     </List>
                 </div>

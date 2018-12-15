@@ -45,14 +45,14 @@ interface RemoveJobAction extends Action<{id: string}> {
 
 const removeJob = createAction<{id: string}>(RemoveJob);
 
-export type AddJobActions = AddJobAction | RemoveJobAction;
+export type JobActions = AddJobAction | RemoveJobAction;
 
 export const jobActions = {
     addJob,
     removeJob
 }
 
-export default function jobsReducer(state: JobsStore = jobsInitialState, action: AddJobActions) {
+export default function jobsReducer(state: JobsStore = jobsInitialState, action: JobActions) {
     switch(action.type) {
         case AddJob: 
             return {
