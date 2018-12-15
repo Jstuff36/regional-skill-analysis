@@ -11,6 +11,10 @@
     font-weight: bold;
 }
 
-.navBarLoggedInContainer .navBarItems {
+.navBarLoggedInContainer .navBarItem {
     align-self: center;
+}
+
+.navBarLoggedInContainer .link {
+    color: black;
 }

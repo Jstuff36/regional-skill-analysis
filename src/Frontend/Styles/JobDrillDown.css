@@ -10,3 +10,7 @@
 .jobDrillDownContainer .skillContainer {
     display: flex;
 }
+
+.jobDrillDownContainer .description {
+    padding-top: 10px;
+}

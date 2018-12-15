@@ -3,7 +3,7 @@ import { Job } from 'src/Frontend/Reducers/jobsReducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { connect } from 'react-redux';
-import { Icon, List } from 'semantic-ui-react';
+import { Icon, List, Divider } from 'semantic-ui-react';
 import '../../Styles/JobDrillDown.css';
 
 interface StateProps {
@@ -30,10 +30,10 @@ class JobDrilldownComponent extends React.Component<Props> {
                                 {
                                     skillMatches.map(skill => (
                                         <List.Item>
-                                            <div className="skillContainer">
-                                                <Icon name="checkmark" color="green" />
+                                            <Icon name="checkmark" color="green" />
+                                            <List.Content className="skillContainer">
                                                 <div>{skill}</div>
-                                            </div>
+                                            </List.Content>
                                         </List.Item>
                                     ))
                                 }
@@ -45,15 +45,15 @@ class JobDrilldownComponent extends React.Component<Props> {
                 {
                     skillsMissing.length > 0 ?
                         <>
-                            <div className="title">Skills Missing</div>
+                            <div className="title">Skills Needed to Apply</div>
                             <List>
                                 {
                                     skillsMissing.map(skill => (
                                         <List.Item>
-                                            <div className="skillContainer">
-                                                <Icon name="delete" color="red" />
-                                                <div>{skill}</div>
-                                            </div>
+                                            <Icon name="delete" color="red" />
+                                            <List.Content className="skillContainer">
+                                                {skill}
+                                            </List.Content>
                                         </List.Item>
                                     ))
                                 }
@@ -73,7 +73,10 @@ class JobDrilldownComponent extends React.Component<Props> {
         return (
             <div className="jobDrillDownContainer">
                 <div className="title">{job.position}</div>
+                <div className="description">{job.description}</div>
+                <Divider/>
                 {this.renderSkillsSection()}
+                <Divider/>
             </div>
         )
     }

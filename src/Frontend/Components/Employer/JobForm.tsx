@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import '../../Styles/JobForm.css';
-import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps, List, Icon } from 'semantic-ui-react';
+import { Form, InputOnChangeData, DropdownItemProps, DropdownProps, CheckboxProps, List, Icon, TextAreaProps } from 'semantic-ui-react';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { SkillCheckBoxOptions } from '../HomePage';
 import { jobActions, JobsStore } from 'src/Frontend/Reducers/jobsReducer';
@@ -11,6 +11,7 @@ interface State {
     zipCode: string;
     skillCheckBoxOptions: SkillCheckBoxOptions[];
     dropdownOptions: DropdownItemProps[];
+    jobDescription: string;
 }
 
 interface StateProps {
@@ -47,11 +48,13 @@ class JobFormComponent extends React.Component<Props, State> {
         position: '',
         zipCode: '',
         skillCheckBoxOptions: [],
-        dropdownOptions: []
+        dropdownOptions: [],
+        jobDescription: ''
     }
 
     onPositionChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ position: value });
     onZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ zipCode: value });
+    onJobDescriptionChange = (_: React.FormEvent<HTMLTextAreaElement>, { value }: TextAreaProps) => this.setState({ jobDescription: value as string });
 
     handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, { value }: DropdownProps) => {
         // Need to cast e here because React SUI has incorrectly typed the event
@@ -104,7 +107,7 @@ class JobFormComponent extends React.Component<Props, State> {
     }
 
     renderJobForm = () => {
-        const { position, zipCode, skillCheckBoxOptions, dropdownOptions } = this.state;
+        const { position, zipCode, skillCheckBoxOptions, dropdownOptions, jobDescription } = this.state;
         return (
             <Form>
                 <Form.Input
@@ -120,6 +123,13 @@ class JobFormComponent extends React.Component<Props, State> {
                     onChange={this.onZipCodeChange}
                     required
                     value={zipCode}
+                />
+                <Form.TextArea
+                    label={'Job Description'}
+                    placeholder={'Job Description'}
+                    onChange={this.onJobDescriptionChange}
+                    rows={5}
+                    value={jobDescription}
                 />
                 <Form.Field>
                     <label>Select Required Skills</label>
@@ -162,7 +172,9 @@ class JobFormComponent extends React.Component<Props, State> {
                         Object.keys(jobs).map(jobID => (
                             <List.Item className="jobPosting">
                                 <Icon name="delete" onClick={() => removeJob({ id: jobID })} color={"red"} />
-                                {jobs[jobID].position}
+                                <List.Content>
+                                    {jobs[jobID].position}
+                                </List.Content>
                             </List.Item>
                         ))
                     }

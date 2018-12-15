@@ -11,10 +11,13 @@ class NavBarLoggedInComponent extends React.Component<Props> {
         return (
             <div className="positioningContainer">
                 <div className="navBarLoggedInContainer">
-                    <Link to={'/'} className="navBarName">Regional Skill Analysis</Link>
-                    <List horizontal className="navBarItems">
+                    <Link to={'/'} className="navBarName link">Regional Skill Analysis</Link>
+                    <List horizontal divided className="navBarItem">
                         <List.Item>
-                            <Link to={'/new-job'}>Post A Job</Link>
+                            <Link className="link" to={'/new-job'}>Post A Job</Link>
+                        </List.Item>
+                        <List.Item>
+                            <Link className="link" to={'/new-education'}>Post A Class</Link>
                         </List.Item>
                     </List>
                 </div>
