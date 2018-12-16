@@ -9,6 +9,7 @@ import { HomePage } from './Frontend/Components/HomePage';
 import { JobForm } from './Frontend/Components/Employer/JobForm';
 import { JobDrilldown } from './Frontend/Components/Job/JobDrilldown';
 import { CourseForm } from './Frontend/Components/Employer/CourseForm';
+import { Footer } from './Frontend/Components/Footer';
 
 const store = configureStore(initialState);
 
@@ -24,6 +25,7 @@ class App extends React.Component {
             <Route path="/new-job" component={JobForm}/>
             <Route path="/job/:id" component={JobDrilldown}/>
             <Route path="/new-course" component={CourseForm}/>
+            <Footer/>
           </>
         </HashRouter>
       </Provider>
