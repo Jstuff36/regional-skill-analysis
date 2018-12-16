@@ -8,6 +8,7 @@ interface OwnProps {
     skillCheckBoxOptions: SkillCheckBoxOptions[];
     onCheckboxUpdate: (e: React.MouseEvent<HTMLInputElement>, label: SemanticShorthandItem<HtmlLabelProps>) => void;
     onSearchUpdate: (e: React.SyntheticEvent<HTMLElement>, value: string) => void;
+    hideLabel?: boolean;
 }
 
 export class SkillSearchSelection extends React.Component<OwnProps> {
@@ -23,10 +24,10 @@ export class SkillSearchSelection extends React.Component<OwnProps> {
     }
 
     render() {
-        const {dropdownOptions, skillCheckBoxOptions} = this.props;
+        const { dropdownOptions, skillCheckBoxOptions, hideLabel } = this.props;
         return (
             <Form.Field>
-                <label>Select Required Skills</label>
+                {hideLabel ? null : <label>Select Required Skills</label>}
                 <Form.Dropdown
                     required
                     labeled

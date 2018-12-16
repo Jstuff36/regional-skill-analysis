@@ -1,10 +1,12 @@
 import * as React from 'react';
 import '../Styles/HomePage.css';
 import { connect } from 'react-redux';
-import { Input, InputOnChangeData, Divider, List, Checkbox, Dropdown, DropdownItemProps, DropdownProps, CheckboxProps, Button } from 'semantic-ui-react';
+import { Input, InputOnChangeData, Divider, List, DropdownItemProps, Button, Form } from 'semantic-ui-react';
 import { StoreState } from '../Reducers/rootReducer';
 import { JobsStore } from '../Reducers/jobsReducer';
 import { Link } from 'react-router-dom';
+import { SkillSearchSelection } from './Employer/SkillSearchSelection';
+import { SemanticShorthandItem, HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
 
 // TODO: move this to a common place
 export interface SkillCheckBoxOptions {
@@ -55,7 +57,7 @@ class HomePageComponent extends React.Component<Props, State> {
 
     handleZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ zipCode: value });
 
-    handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, {value}: DropdownProps) => {
+    handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, value: string) => {
         // Need to cast e here because React SUI has incorrectly typed the event
         if (e.type === 'click' || (e as unknown as KeyboardEvent).key === "Enter") { 
             this.setState(({skillCheckBoxOptions: oldCheckBoxOptions}) => {
@@ -74,7 +76,7 @@ class HomePageComponent extends React.Component<Props, State> {
         }
     }
 
-    handleCheckBoxSelection = (_: React.MouseEvent<HTMLInputElement>, {label}: CheckboxProps) => {
+    handleCheckBoxSelection = (_: React.MouseEvent<HTMLInputElement>, label: SemanticShorthandItem<HtmlLabelProps>) => {
         this.setState(({ skillCheckBoxOptions: oldCheckBoxOptions }) => {
             const newCheckBoxOptions = oldCheckBoxOptions.map(option => {
                 if (label === option.value) {
@@ -187,29 +189,15 @@ class HomePageComponent extends React.Component<Props, State> {
                 </div>  
                 <div className="rightSide">
                     <div className="header">Select skills to narrow the search</div>
-                    <div className={"inputClass"}>
-                        <Dropdown 
-                            placeholder='Search...' 
-                            fluid
-                            search
-                            selection
-                            options={dropdownOptions}  
-                            onChange={this.handleSearchSelect} 
+                    <Form className="skillForm">
+                        <SkillSearchSelection
+                            dropdownOptions={dropdownOptions}
+                            skillCheckBoxOptions={skillCheckBoxOptions}
+                            onCheckboxUpdate={this.handleCheckBoxSelection}
+                            onSearchUpdate={this.handleSearchSelect}
+                            hideLabel
                         />
-                    </div>
-                    <List>
-                        {
-                            skillCheckBoxOptions.map(({value, checked}, idx) => (
-                                <List.Item key={idx}>
-                                    <Checkbox 
-                                        checked={checked} 
-                                        label={value}
-                                        onClick={this.handleCheckBoxSelection}
-                                    />
-                                </List.Item>
-                            ))
-                        }
-                    </List>
+                    </Form>
                 </div>
             </div>
         )

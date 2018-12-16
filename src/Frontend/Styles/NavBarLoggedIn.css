@@ -3,6 +3,7 @@
     display: flex;
     width: 1080px;
     margin: 0 auto;
+    justify-content: space-between;
 }
 
 .navBarLoggedInContainer .navBarName {
@@ -17,4 +18,12 @@
 
 .navBarLoggedInContainer .link {
     color: black;
+}
+
+.navBarLoggedInContainer .navBarList {
+    line-height: 0;
+}
+
+.navBarLoggedInContainer .leftOption {
+    font-size: 20px;
 }

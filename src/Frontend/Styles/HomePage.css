@@ -18,6 +18,10 @@
     padding: 15px 0;
 }
 
+.homePageContainer .skillForm {
+    padding-top: 15px;
+}
+
 .homePageContainer .noZipCodeText {
     color: grey;
     padding: 15px 0 ;
@@ -34,7 +38,7 @@
 
 .homePageContainer .jobsContainer {
     padding: 15px;
-    border: solid 1px black;
+    border: solid 1px rgba(34, 36, 38, 0.15);;
     border-radius: 2px;
     margin-top: 15px;
 }
