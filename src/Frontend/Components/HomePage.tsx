@@ -101,7 +101,7 @@ class HomePageComponent extends React.Component<Props, State> {
             return (
                 <div className="jobsContainer">
                     {
-                        jobIdMatches.map(id => {
+                        jobIdMatches.map((id, idx) => {
                             const skillMatches = checkedSkills.filter(
                                 ({value}) => jobs[id].skills.find(jobSkill => jobSkill === value)
                             );
@@ -109,33 +109,37 @@ class HomePageComponent extends React.Component<Props, State> {
                             const numSkillsMissing = Math.max(jobs[id].skills.length - numSkillMatches, 0);
                             
                             return (
-                                <List key={id}>
-                                    <List.Item>
-                                        <div className={"singleJobContainer"}>
-                                            <div>
-                                                <div className="jobTitle">
-                                                    {jobs[id].position}
-                                                </div>
-                                                <div className="skillsSummary">
-                                                    <div>
-                                                        {`${numSkillMatches} skills in common`}
+                                <React.Fragment key={id}>
+                                    <List>
+                                        <List.Item>
+                                            <div className={"singleJobContainer"}>
+                                                <div>
+                                                    <div className="jobTitle">
+                                                        {jobs[id].position}
                                                     </div>
-                                                    <div>
-                                                        {`${numSkillsMissing} missing skills`}
-                                                    </div>
+                                                    <List className="skillsSummary">
+                                                        <List.Item>
+                                                            {`${numSkillMatches} skills in common`}
+                                                        </List.Item>
+                                                        <List.Item>
+                                                            {`${numSkillsMissing} missing skills`}
+                                                        </List.Item>
+                                                    </List>
                                                 </div>
+                                                <Link
+                                                    className="viewJobButton" 
+                                                    to={{
+                                                        pathname: `/job/${id}`,
+                                                        state: {skillMatches: skillMatches.map(({ value }) => value)}
+                                                    }}
+                                                >
+                                                    <Button style={{height: 40}} content={"View Job"}/>
+                                                </Link>
                                             </div>
-                                            <Link 
-                                                to={{
-                                                    pathname: `/job/${id}`,
-                                                    state: {skillMatches: skillMatches.map(({ value }) => value)}
-                                                }}
-                                            >
-                                                <Button style={{height: 40}} content={"View Job"}/>
-                                            </Link>
-                                        </div>
-                                    </List.Item>
-                                </List>
+                                        </List.Item>
+                                    </List>
+                                    {idx < jobIdMatches.length - 1 ? <Divider/> : null}
+                                </React.Fragment>
                             )
                         })
                     }
