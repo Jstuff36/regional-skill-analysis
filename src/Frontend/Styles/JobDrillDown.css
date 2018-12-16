@@ -1,6 +1,7 @@
 .jobDrillDownContainer {
     width: 1080px;
     margin: 20px auto;
+    flex: 1;
 }
 
 .jobDrillDownContainer .title {
