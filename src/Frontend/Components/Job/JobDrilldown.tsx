@@ -3,7 +3,7 @@ import { Job } from 'src/Frontend/Reducers/jobsReducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { connect } from 'react-redux';
-import { Icon, List, Divider } from 'semantic-ui-react';
+import { Icon, List, Divider, Accordion } from 'semantic-ui-react';
 import '../../Styles/JobDrillDown.css';
 import { Course } from 'src/Frontend/Reducers/coursesReducer';
 
@@ -18,9 +18,9 @@ class JobDrilldownComponent extends React.Component<Props> {
 
     renderSkillsSection = () => {
 
-        const { job, location: { state }} = this.props;
+        const { job, location: { state: urlState }} = this.props;
 
-        const skillMatches = state ? state.skillMatches : [];
+        const skillMatches = urlState ? urlState.skillMatches : [];
         const skillsMissing = job.skills.filter(skill => !skillMatches.find(skillMatch => skillMatch === skill));
         return (
             <div>
@@ -68,6 +68,27 @@ class JobDrilldownComponent extends React.Component<Props> {
         )
     }
 
+    renderCoursesSection = () => {
+        const {job, location: {state: urlState}} = this.props;
+
+        const skillMatches = urlState ? urlState.skillMatches : [];
+        const skillsMissing = job.skills.filter(skill => !skillMatches.find(skillMatch => skillMatch === skill));
+        return (
+            <div className="title">
+                <div>Courses Avaliable in Your Area</div>
+                <Accordion className="courseListings" styled fluid>
+                    {
+                        skillsMissing.map(skill => (
+                            <Accordion.Title className="course" key={skill}>
+                                {skill}
+                            </Accordion.Title>
+                        ))
+                    }
+                </Accordion>
+            </div>
+        );
+    }
+
     render() {
 
         const {job} = this.props;
@@ -79,6 +100,7 @@ class JobDrilldownComponent extends React.Component<Props> {
                 <Divider/>
                 {this.renderSkillsSection()}
                 <Divider/>
+                {this.renderCoursesSection()}
             </div>
         )
     }
