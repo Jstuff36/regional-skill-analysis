@@ -1,6 +1,10 @@
 .footerPositioningContainer {
     background-color: #00bfff;
     height: 75px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 .footerContainer {

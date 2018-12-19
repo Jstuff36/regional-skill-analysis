@@ -10,6 +10,7 @@ import { JobForm } from './Frontend/Components/Employer/JobForm';
 import { JobDrilldown } from './Frontend/Components/Job/JobDrilldown';
 import { CourseForm } from './Frontend/Components/Employer/CourseForm';
 import { Footer } from './Frontend/Components/Footer';
+import './Frontend/Styles/GeneralStyling.css';
 
 const store = configureStore(initialState);
 
@@ -20,11 +21,13 @@ class App extends React.Component {
         <HashRouter>
           <>
             <NavBar/>
-            <Route exact={true} path="/" component={HomePage} />
-            <Route path="/login" component={LoginPage}/>
-            <Route path="/new-job" component={JobForm}/>
-            <Route path="/job/:id" component={JobDrilldown}/>
-            <Route path="/new-course" component={CourseForm}/>
+            <div className="bodyPositioningContainer">
+              <Route exact={true} path="/" component={HomePage} />
+              <Route path="/login" component={LoginPage}/>
+              <Route path="/new-job" component={JobForm}/>
+              <Route path="/job/:id" component={JobDrilldown}/>
+              <Route path="/new-course" component={CourseForm}/>
+            </div>
             <Footer/>
           </>
         </HashRouter>
