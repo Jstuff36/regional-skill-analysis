@@ -12,6 +12,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// test
 const (
 	host   = "localhost"
 	port   = 5432
