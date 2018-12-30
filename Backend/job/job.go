@@ -113,7 +113,17 @@ func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(job)
 }
 
-func (s *JobRouter) deleteJob(w http.ResponseWriter, r *http.Request) {}
+func (s *JobRouter) deleteJob(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	ID, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = s.db.Exec("DELETE FROM job WHERE id = $1", ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 type JobRouter struct {
 	db *sql.DB
