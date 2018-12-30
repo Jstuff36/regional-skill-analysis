@@ -48,12 +48,31 @@ func AddRoutes(router *mux.Router) func() {
 
 func (s *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
 	zipCode := mux.Vars(r)["zipCode"]
-	var jobs []Job
 	rows, err := s.db.Query("SELECT * FROM job WHERE zipcode = $1", zipCode)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// json.NewEncoder(w).Encode(jobs)
+	var (
+		ID          int
+		Position    string
+		Description string
+	)
+	defer rows.Close()
+	var jobs []Job
+	i := 0
+	for rows.Next() {
+		err := rows.Scan(&ID, &Position, &zipCode, &Description)
+		if err != nil {
+			log.Panic(err)
+		}
+		jobs = append(jobs, Job{ID: ID, Position: Position, ZipCode: zipCode, Description: Description})
+		i++
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Panic(err)
+	}
+	json.NewEncoder(w).Encode(jobs)
 }
 
 func (s *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {
