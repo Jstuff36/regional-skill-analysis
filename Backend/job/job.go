@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
-	// "github.com/jstuff36/regional-skill-analysis/Backend/log"
 	_ "github.com/lib/pq"
 )
 
@@ -20,7 +20,7 @@ const (
 )
 
 type Job struct {
-	Id          string   `json:"id`
+	ID          int      `json:"id`
 	Position    string   `json:"position"`
 	ZipCode     string   `json:"zipCode"`
 	Skills      []string `json:"skills"`
@@ -36,7 +36,7 @@ func AddRoutes(router *mux.Router) func() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	router.HandleFunc("/job/{zipCode}", jobRouter.getJobs).Methods("GET")
+	router.HandleFunc("/job/all-by-zipCode/{zipCode}", jobRouter.getJobs).Methods("GET")
 	router.HandleFunc("/job/{id}", jobRouter.getJob).Methods("GET")
 	router.HandleFunc("/job/{id}", jobRouter.createJob).Methods("POST")
 	router.HandleFunc("/job/{id}", jobRouter.deleteJob).Methods("DELETE")
@@ -53,7 +53,20 @@ func (s *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(jobs)
 }
 
-func (s *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {}
+func (s *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	ID, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatal(err)
+	}
+	var job Job
+	err = s.db.QueryRow("SELECT * FROM job WHERE id = $1", ID).Scan(&job.ID, &job.Position, &job.ZipCode, &job.Description)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(job.Position)
+	// return job
+}
 
 func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -61,14 +74,18 @@ func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&job); err != nil {
 		log.Fatal(err)
 	}
-	job.Id = params["id"]
+	var err error
+	job.ID, err = strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatal(err)
+	}
 	sqlStatement := `
 		INSERT INTO job (id, position, zipcode, description)
 		VALUES ($1, $2, $3, $4)
 		RETURNING id
 	`
 	id := 0
-	if err := s.db.QueryRow(sqlStatement, job.Id, job.Position, job.ZipCode, job.Description).Scan(&id); err != nil {
+	if err = s.db.QueryRow(sqlStatement, job.ID, job.Position, job.ZipCode, job.Description).Scan(&id); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("success, new id is ", id)
