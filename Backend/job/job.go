@@ -47,10 +47,13 @@ func AddRoutes(router *mux.Router) func() {
 }
 
 func (s *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
-	// zipCode := mux.Vars(r)["zipCode"]
-	// Make some query to the database for all jobs with given zipCode
+	zipCode := mux.Vars(r)["zipCode"]
 	var jobs []Job
-	json.NewEncoder(w).Encode(jobs)
+	rows, err := s.db.Query("SELECT * FROM job WHERE zipcode = $1", zipCode)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// json.NewEncoder(w).Encode(jobs)
 }
 
 func (s *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +67,7 @@ func (s *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(job.Position)
-	// return job
+	json.NewEncoder(w).Encode(job)
 }
 
 func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
@@ -85,10 +87,11 @@ func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 		RETURNING id
 	`
 	id := 0
+	// TODO: May be best to change this to an exec per http://go-database-sql.org/modifying.html
 	if err = s.db.QueryRow(sqlStatement, job.ID, job.Position, job.ZipCode, job.Description).Scan(&id); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("success, new id is ", id)
+	json.NewEncoder(w).Encode(job)
 }
 
 func (s *JobRouter) deleteJob(w http.ResponseWriter, r *http.Request) {}
