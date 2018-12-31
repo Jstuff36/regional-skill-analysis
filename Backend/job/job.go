@@ -125,12 +125,12 @@ func (s *JobRouter) deleteJob(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type JobRouter struct {
-	db *sql.DB
-}
-
 func (jobRouter *JobRouter) close() {
 	jobRouter.db.Close()
+}
+
+type JobRouter struct {
+	db *sql.DB
 }
 
 func newJobRouter() (*JobRouter, error) {
