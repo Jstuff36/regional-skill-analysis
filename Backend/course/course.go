@@ -45,7 +45,17 @@ func AddRoutes(router *mux.Router) func() {
 }
 
 func (courseRouter *CourseRouter) getCourse(w http.ResponseWriter, r *http.Request) {
-
+	params := mux.Vars(r)
+	ID, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatal(err)
+	}
+	var course Course
+	err = courseRouter.db.QueryRow("SELECT * FROM course WHERE id = $1", ID).Scan(&course.ID, &course.Name, &course.ZipCode, &course.Description)
+	if err != nil {
+		log.Fatal(err)
+	}
+	json.NewEncoder(w).Encode(course)
 }
 
 func (courseRouter *CourseRouter) createCourse(w http.ResponseWriter, r *http.Request) {
