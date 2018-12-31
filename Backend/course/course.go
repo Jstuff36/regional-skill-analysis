@@ -73,7 +73,15 @@ func (courseRouter *CourseRouter) createCourse(w http.ResponseWriter, r *http.Re
 }
 
 func (courseRouter *CourseRouter) deleteCourse(w http.ResponseWriter, r *http.Request) {
-
+	params := mux.Vars(r)
+	ID, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = courseRouter.db.Exec("DELETE FROM course WHERE id = $1", ID)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (courseRouter *CourseRouter) close() {
