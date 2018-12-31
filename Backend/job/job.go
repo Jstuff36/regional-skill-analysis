@@ -46,9 +46,9 @@ func AddRoutes(router *mux.Router) func() {
 	}
 }
 
-func (s *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
+func (jobRouter *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
 	zipCode := mux.Vars(r)["zipCode"]
-	rows, err := s.db.Query("SELECT * FROM job WHERE zipcode = $1", zipCode)
+	rows, err := jobRouter.db.Query("SELECT * FROM job WHERE zipcode = $1", zipCode)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,21 +75,21 @@ func (s *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(jobs)
 }
 
-func (s *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {
+func (jobRouter *JobRouter) getJob(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	ID, err := strconv.Atoi(params["id"])
 	if err != nil {
 		log.Fatal(err)
 	}
 	var job Job
-	err = s.db.QueryRow("SELECT * FROM job WHERE id = $1", ID).Scan(&job.ID, &job.Position, &job.ZipCode, &job.Description)
+	err = jobRouter.db.QueryRow("SELECT * FROM job WHERE id = $1", ID).Scan(&job.ID, &job.Position, &job.ZipCode, &job.Description)
 	if err != nil {
 		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(job)
 }
 
-func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
+func (jobRouter *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	var job Job
 	if err := json.NewDecoder(r.Body).Decode(&job); err != nil {
@@ -107,19 +107,19 @@ func (s *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 	`
 	id := 0
 	// TODO: May be best to change this to an exec per http://go-database-sql.org/modifying.html
-	if err = s.db.QueryRow(sqlStatement, job.ID, job.Position, job.ZipCode, job.Description).Scan(&id); err != nil {
+	if err = jobRouter.db.QueryRow(sqlStatement, job.ID, job.Position, job.ZipCode, job.Description).Scan(&id); err != nil {
 		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(job)
 }
 
-func (s *JobRouter) deleteJob(w http.ResponseWriter, r *http.Request) {
+func (jobRouter *JobRouter) deleteJob(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	ID, err := strconv.Atoi(params["id"])
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = s.db.Exec("DELETE FROM job WHERE id = $1", ID)
+	_, err = jobRouter.db.Exec("DELETE FROM job WHERE id = $1", ID)
 	if err != nil {
 		log.Fatal(err)
 	}

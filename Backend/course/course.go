@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	s "github.com/derekparker/delve/service/test"
 	"github.com/gorilla/mux"
 )
 
@@ -34,19 +35,19 @@ func AddRoutes(router *mux.Router) func() {
 	}
 }
 
-func (s *CourseRouter) getCourse(w http.ResponseWriter, r *http.Request) {
+func (courseRouter *CourseRouter) getCourse(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (s *CourseRouter) createCourse(w http.ResponseWriter, r *http.Request) {
+func (courseRouter *CourseRouter) createCourse(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (s *CourseRouter) deleteCourse(w http.ResponseWriter, r *http.Request) {
+func (courseRouter *CourseRouter) deleteCourse(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (s *CourseRouter) close() {
+func (courseRouter *CourseRouter) close() {
 	s.db.Close()
 }
 
