@@ -20,7 +20,7 @@ const (
 )
 
 type Job struct {
-	ID          int      `json:"id`
+	ID          int      `json:"id"`
 	Position    string   `json:"position"`
 	ZipCode     string   `json:"zipCode"`
 	Skills      []string `json:"skills"`

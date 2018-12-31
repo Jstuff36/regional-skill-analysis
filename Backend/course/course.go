@@ -2,11 +2,12 @@ package course
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
-	s "github.com/derekparker/delve/service/test"
 	"github.com/gorilla/mux"
 )
 
@@ -16,6 +17,14 @@ const (
 	user   = "postgres"
 	dbname = "regional_skill_analysis"
 )
+
+type Course struct {
+	ID          int      `json:"id"`
+	Name        string   `json:"name"`
+	ZipCode     string   `json:"zipcode"`
+	Skills      []string `json:"skills"`
+	Description string   `json:"description,omitempty"`
+}
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -40,7 +49,27 @@ func (courseRouter *CourseRouter) getCourse(w http.ResponseWriter, r *http.Reque
 }
 
 func (courseRouter *CourseRouter) createCourse(w http.ResponseWriter, r *http.Request) {
-
+	params := mux.Vars(r)
+	var course Course
+	if err := json.NewDecoder(r.Body).Decode(&course); err != nil {
+		log.Fatal(err)
+	}
+	var err error
+	course.ID, err = strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatal(err)
+	}
+	sqlStatement := `
+		INSERT INTO course (id, name, zipcode, description)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id
+	`
+	id := 0
+	// TODO: May be best to change this to an exec per http://go-database-sql.org/modifying.html
+	if err := courseRouter.db.QueryRow(sqlStatement, course.ID, course.Name, course.ZipCode, course.Description).Scan(&id); err != nil {
+		log.Fatal(err)
+	}
+	json.NewEncoder(w).Encode(course)
 }
 
 func (courseRouter *CourseRouter) deleteCourse(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +77,7 @@ func (courseRouter *CourseRouter) deleteCourse(w http.ResponseWriter, r *http.Re
 }
 
 func (courseRouter *CourseRouter) close() {
-	s.db.Close()
+	courseRouter.db.Close()
 }
 
 type CourseRouter struct {
