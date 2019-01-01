@@ -7,6 +7,8 @@ import { SkillCheckBoxOptions } from '../HomePage';
 import { jobActions, JobsStore } from 'src/Frontend/Reducers/jobsReducer';
 import { SkillSearchSelection } from './SkillSearchSelection';
 import { SemanticShorthandItem, HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
+import { backendBaseURL } from 'src/Frontend/EnvConstants';
+// const uuidv4 = require('uuid/v4');
 
 interface State {
     position: string;
@@ -96,11 +98,24 @@ class JobFormComponent extends React.Component<Props, State> {
     postJob = () => {
         const {zipCode, position, skillCheckBoxOptions} = this.state;
         const {addJob} = this.props;
+        // Make an axios post here then send addJob action
+        // const id = uuidv4();
+        // const newJob: Job = {
+        //     zipCode,
+        //     position,
+        //     skills: skillCheckBoxOptions.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
+        // }
+        // fetch(`localhost8080:/job/${id}`, newJob).then(
+        //     resp => resp.body
+        // ).catch(
+        //     console.log("some error")
+        // )
+        console.log(backendBaseURL);
         addJob({
             zipCode,
             position,
             skills: skillCheckBoxOptions.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
-        })
+        })  
     }
 
     isButtonDisabled = (): boolean => {
