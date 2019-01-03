@@ -35,9 +35,9 @@ func AddRoutes(router *mux.Router) func() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	router.HandleFunc("/course/{id}", courseRouter.getCourse).Methods("GET")
-	router.HandleFunc("/course/{id}", courseRouter.createCourse).Methods("POST")
-	router.HandleFunc("/course/{id}", courseRouter.deleteCourse).Methods("DELETE")
+	router.HandleFunc("api/v1/courses/{id}", courseRouter.getCourse).Methods("GET")
+	router.HandleFunc("api/v1/courses/{id}", courseRouter.createCourse).Methods("POST")
+	router.HandleFunc("api/v1/courses/{id}", courseRouter.deleteCourse).Methods("DELETE")
 
 	return func() {
 		courseRouter.close()

@@ -36,10 +36,10 @@ func AddRoutes(router *mux.Router) func() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	router.HandleFunc("/job/all-by-zipCode/{zipCode}", jobRouter.getJobs).Methods("GET")
-	router.HandleFunc("/job/{id}", jobRouter.getJob).Methods("GET")
-	router.HandleFunc("/job/{id}", jobRouter.createJob).Methods("POST")
-	router.HandleFunc("/job/{id}", jobRouter.deleteJob).Methods("DELETE")
+	router.HandleFunc("api/v1/jobs/all-by-zipCode/{zipCode}", jobRouter.getJobs).Methods("GET")
+	router.HandleFunc("api/v1/jobs/{id}", jobRouter.getJob).Methods("GET")
+	router.HandleFunc("api/v1/jobs/{id}", jobRouter.createJob).Methods("POST")
+	router.HandleFunc("api/v1/jobs/{id}", jobRouter.deleteJob).Methods("DELETE")
 
 	return func() {
 		jobRouter.close()
