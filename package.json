@@ -8,6 +8,7 @@
     "@types/redux-actions": "^2.3.1",
     "@types/redux-logger": "^3.0.6",
     "@types/uuid": "^3.4.4",
+    "axios": "^0.18.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-redux": "^6.0.0",

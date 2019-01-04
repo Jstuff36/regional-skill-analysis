@@ -2,6 +2,7 @@ import { createAction, Action } from 'redux-actions';
 const uuidv1 = require('uuid/v1');
 
 export interface Job {
+    id: string;
     position: string;
     zipCode: string;
     skills: string[];
@@ -14,12 +15,14 @@ export interface JobsStore {
 
 export const jobsInitialState: JobsStore = {
     '12321': {
+        id: '12321',
         position: 'CNC Programmer',
         zipCode: '11111',
         skills: ['CNC Programming', 'CAD', '3D Printing'],
         description: "A long winded explanation of some random job woopie...blah blah blah blah balh balha blah blah"
     },
     '11111': {
+        id: '11111',
         position: 'Professional Paint Watcher',
         zipCode: '11111',
         skills: ['CNC Programming', 'Some random skill'],
@@ -55,9 +58,13 @@ export const jobActions = {
 export default function jobsReducer(state: JobsStore = jobsInitialState, action: JobActions) {
     switch(action.type) {
         case AddJob: 
-            return {
-                ...state,
-                [uuidv1()]: action.payload
+            if (action.payload) {
+                return {
+                    ...state,
+                    [action.payload.id]: action.payload
+                }
+            } else {
+                return state;
             }
         case RemoveJob:
             const { id } = action.payload!;
