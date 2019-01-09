@@ -1,5 +1,4 @@
 import { createAction, Action } from 'redux-actions';
-const uuidv1 = require('uuid/v1');
 
 export interface Job {
     id: string;

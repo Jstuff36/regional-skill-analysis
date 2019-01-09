@@ -108,7 +108,7 @@ class JobFormComponent extends React.Component<Props, State> {
             skills: skillCheckBoxOptions.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
         }
 
-        axios.post<Job>(`${backendBaseURL}/api/v1/jobs/${id}`, newJob)
+        axios.post<Job>(`${backendBaseURL}/api/v1/jobs`, newJob)
             .then(resp => {
                 addJob(resp.data)
             })
