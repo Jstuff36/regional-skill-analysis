@@ -96,10 +96,6 @@ func (jobRouter *JobRouter) createJob(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	var err error
-	// job.ID, err = strconv.Atoi(params["id"])
-	// if err != nil {
-	// log.Fatal(err)
-	// }
 	sqlStatement := `
 		INSERT INTO job (id, position, zipcode, description)
 		VALUES ($1, $2, $3, $4)

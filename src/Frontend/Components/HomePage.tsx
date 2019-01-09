@@ -7,6 +7,7 @@ import { JobsStore } from '../Reducers/jobsReducer';
 import { Link } from 'react-router-dom';
 import { SkillSearchSelection } from './Employer/SkillSearchSelection';
 import { SemanticShorthandItem, HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
+import Axios from 'axios';
 
 // TODO: move this to a common place
 export interface SkillCheckBoxOptions {
@@ -55,7 +56,15 @@ class HomePageComponent extends React.Component<Props, State> {
         dropdownOptions: []
     }
 
-    handleZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => this.setState({ zipCode: value });
+    handleZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
+        this.setState({ zipCode: value }, () => {
+            const {zipCode} = this.state;
+            if (zipCode.length > 4) {
+                // Make some axios call here to get all jobs by zipcode
+            }
+        });
+        
+    }
 
     handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, value: string) => {
         // Need to cast e here because React SUI has incorrectly typed the event
