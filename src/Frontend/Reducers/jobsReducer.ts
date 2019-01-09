@@ -56,6 +56,13 @@ export const jobActions = {
 
 export default function jobsReducer(state: JobsStore = jobsInitialState, action: JobActions) {
     switch(action.type) {
+        case AddJobsByZipCode:
+            // when type ahead queries for zipcode merge them in here
+            // Then load that data into the home page for show all zipcodes they searched for
+            // By saving it by zipcode we can keep old searches saved under there zipcode
+            // This will also make it easy for the user to go back
+
+        // Check to see if this is right. Shouldnt it do merge the object that that zipcode maps to
         case AddJob: 
             if (action.payload) {
                 return {
