@@ -3,17 +3,19 @@ import '../Styles/HomePage.css';
 import { connect } from 'react-redux';
 import { Input, InputOnChangeData, Divider, List, DropdownItemProps, Button, Form } from 'semantic-ui-react';
 import { StoreState } from '../Reducers/rootReducer';
-import { JobsStore } from '../Reducers/jobsReducer';
+import { JobsStore, Job, jobActionCreators } from '../Reducers/jobsReducer';
 import { Link } from 'react-router-dom';
 import { SkillSearchSelection } from './Employer/SkillSearchSelection';
 import { SemanticShorthandItem, HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
-import Axios from 'axios';
+import Axios, { CancelTokenSource } from 'axios';
 
 // TODO: move this to a common place
 export interface SkillCheckBoxOptions {
     value: string;
     checked: boolean;
 }
+
+type DispatchProps = typeof jobActionCreators;
 
 interface State {
     zipCode: string;
@@ -26,7 +28,7 @@ interface StateProps {
     jobs: JobsStore;
 }
 
-type Props = StateProps
+type Props = StateProps & DispatchProps;
 
 class HomePageComponent extends React.Component<Props, State> {
 
@@ -50,6 +52,8 @@ class HomePageComponent extends React.Component<Props, State> {
         return {};
     }
 
+    private cancelToken: CancelTokenSource;
+
     state: State = {
         zipCode: '',
         skillCheckBoxOptions: [],
@@ -57,13 +61,20 @@ class HomePageComponent extends React.Component<Props, State> {
     }
 
     handleZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
+        const {addAllJobsByZipCode} = this.props;
         this.setState({ zipCode: value }, () => {
             const {zipCode} = this.state;
+            if (this.cancelToken) {
+                this.cancelToken.cancel();
+            }
             if (zipCode.length > 4) {
-                // Make some axios call here to get all jobs by zipcode
+                this.cancelToken = Axios.CancelToken.source();
+                Axios.get<Job[]>("/api/v1/jobs/all-by-zipCode/{zipCode}", {
+                    cancelToken: this.cancelToken.token
+                }).then(resp => addAllJobsByZipCode({jobs: resp.data, zipCode}))
             }
         });
-        
+
     }
 
     handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, value: string) => {
@@ -222,4 +233,4 @@ const mapStateToProps = (store: StoreState): StateProps => {
     }
 }
 
-export const HomePage = connect(mapStateToProps)(HomePageComponent);
+export const HomePage = connect(mapStateToProps, jobActionCreators)(HomePageComponent);

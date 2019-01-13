@@ -47,16 +47,39 @@ interface RemoveJobAction extends Action<{id: string}> {
 
 const removeJob = createAction<{id: string}>(RemoveJob);
 
-export type JobActions = AddJobAction | RemoveJobAction;
+type AddAllJobsByZipCode = 'AddAllJobsByZipCode'
+const AddAllJobsByZipCode: AddAllJobsByZipCode = 'AddAllJobsByZipCode';
 
-export const jobActions = {
+export interface AddAlljobsByZipCodePayload {
+    zipCode: string;
+    jobs: Job[];
+}
+
+interface AddAllJobsByZipCodeAction extends Action<AddAlljobsByZipCodePayload> {
+    type: AddAllJobsByZipCode;
+}
+
+const addAllJobsByZipCode = createAction<AddAlljobsByZipCodePayload>(AddAllJobsByZipCode);
+
+export type JobActions = AddJobAction | RemoveJobAction | AddAllJobsByZipCodeAction;
+
+export const jobActionCreators = {
     addJob,
-    removeJob
+    removeJob,
+    addAllJobsByZipCode
 }
 
 export default function jobsReducer(state: JobsStore = jobsInitialState, action: JobActions) {
     switch(action.type) {
-        case AddJobsByZipCode:
+        case AddAllJobsByZipCode:
+            if (action.payload) {
+                return {
+                    ...state,
+                    [action.payload.zipCode]: action.payload.jobs
+                }
+            } else {
+                return state;
+            }
             // when type ahead queries for zipcode merge them in here
             // Then load that data into the home page for show all zipcodes they searched for
             // By saving it by zipcode we can keep old searches saved under there zipcode

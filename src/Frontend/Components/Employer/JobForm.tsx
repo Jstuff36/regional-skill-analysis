@@ -4,7 +4,7 @@ import '../../Styles/JobForm.css';
 import { Form, InputOnChangeData, DropdownItemProps, List, Icon, TextAreaProps } from 'semantic-ui-react';
 import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { SkillCheckBoxOptions } from '../HomePage';
-import { jobActions, JobsStore, Job } from 'src/Frontend/Reducers/jobsReducer';
+import { jobActionCreators, JobsStore, Job } from 'src/Frontend/Reducers/jobsReducer';
 import { SkillSearchSelection } from './SkillSearchSelection';
 import { SemanticShorthandItem, HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
 import axios from 'axios';
@@ -24,7 +24,7 @@ interface StateProps {
     jobs: JobsStore;
 }
 
-type DispatchProps = typeof jobActions;
+type DispatchProps = typeof jobActionCreators;
 
 type Props = StateProps & DispatchProps;
 
@@ -207,4 +207,4 @@ const mapStateToProps = (store: StoreState): StateProps => {
     }
 }
 
-export const JobForm = connect<StateProps, DispatchProps>(mapStateToProps, jobActions)(JobFormComponent)
+export const JobForm = connect<StateProps, DispatchProps>(mapStateToProps, jobActionCreators)(JobFormComponent)
