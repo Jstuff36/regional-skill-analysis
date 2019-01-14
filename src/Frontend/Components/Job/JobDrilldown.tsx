@@ -109,7 +109,7 @@ class JobDrilldownComponent extends React.Component<Props> {
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<{id: string}>): StateProps => {
     const {jobsStore, coursesStore} = state;
     const {match: {params: {id}}} = ownProps;
-    const job = jobsStore[id]
+    const job = Object.keys(jobsStore).find(zipCode => jobsStore[zipCode].find(job => job.id === id))
     return {
         job,
         courses: coursesStore[job.zipCode]

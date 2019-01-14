@@ -59,10 +59,10 @@ func (jobRouter *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
 		Description string
 	)
 	defer rows.Close()
-	var jobs []Job
+	jobs := make([]Job, 0)
 	i := 0
 	for rows.Next() {
-		err := rows.Scan(&ID, &Position, &zipCode, &Description)
+		err := rows.Scan(&ID, &zipCode, &Description, &Position)
 		if err != nil {
 			log.Panic(err)
 		}

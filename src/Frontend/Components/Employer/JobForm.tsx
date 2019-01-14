@@ -167,13 +167,15 @@ class JobFormComponent extends React.Component<Props, State> {
             return(
                 <List>
                     {
-                        Object.keys(jobs).map(jobID => (
-                            <List.Item key={jobID} className="jobPosting">
-                                <Icon name="delete" onClick={() => removeJob({ id: jobID })} color={"red"} />
-                                <List.Content>
-                                    {jobs[jobID].position}
-                                </List.Content>
-                            </List.Item>
+                        Object.keys(jobs).map(zipCode => (
+                            jobs[zipCode].map(job => (
+                                <List.Item key={job.id} className="jobPosting">
+                                    <Icon name="delete" onClick={() => removeJob({ id: job.id })} color={"red"} />
+                                    <List.Content>
+                                        {job.position}
+                                    </List.Content>
+                                </List.Item>
+                            ))
                         ))
                     }
                 </List>

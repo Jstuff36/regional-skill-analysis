@@ -21,18 +21,18 @@ interface State {
     zipCode: string;
     skillCheckBoxOptions: SkillCheckBoxOptions[];
     dropdownOptions: DropdownItemProps[];
+    jobs: Job[];
 }
 
 interface StateProps {
     skills: string[];
-    jobs: JobsStore;
+    jobsStore: JobsStore;
 }
 
 type Props = StateProps & DispatchProps;
 
 class HomePageComponent extends React.Component<Props, State> {
 
-    // TODO: If this is not changed from the job form component then refactor checkbox/search part into own component
     static getDerivedStateFromProps(props: Props, state: State): Partial<State> {
         if (state.skillCheckBoxOptions.length === 0 && state.dropdownOptions.length === 0) {
             const dropdownOptions: DropdownItemProps[] = props.skills.map(skill => ({
@@ -48,8 +48,11 @@ class HomePageComponent extends React.Component<Props, State> {
                 dropdownOptions,
                 skillCheckBoxOptions
             }
+        } else {
+            return {
+                jobs: props.jobsStore[state.zipCode] || []
+            }
         }
-        return {};
     }
 
     private cancelToken: CancelTokenSource;
@@ -57,7 +60,8 @@ class HomePageComponent extends React.Component<Props, State> {
     state: State = {
         zipCode: '',
         skillCheckBoxOptions: [],
-        dropdownOptions: []
+        dropdownOptions: [],
+        jobs: []
     }
 
     handleZipCodeChange = (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
@@ -69,7 +73,7 @@ class HomePageComponent extends React.Component<Props, State> {
             }
             if (zipCode.length > 4) {
                 this.cancelToken = Axios.CancelToken.source();
-                Axios.get<Job[]>("/api/v1/jobs/all-by-zipCode/{zipCode}", {
+                Axios.get<Job[]>(`/api/v1/jobs/all-by-zipCode/${zipCode}`, {
                     cancelToken: this.cancelToken.token
                 }).then(resp => addAllJobsByZipCode({jobs: resp.data, zipCode}))
             }
@@ -113,31 +117,28 @@ class HomePageComponent extends React.Component<Props, State> {
     }
 
     renderJobOptions = () => {
-        const {zipCode, skillCheckBoxOptions} = this.state;
-        const {jobs} = this.props;
-        
-        const jobIdMatches = Object.keys(jobs).filter(id => jobs[id].zipCode === zipCode);
+        const {skillCheckBoxOptions, jobs} = this.state;
         const checkedSkills = skillCheckBoxOptions.filter(({checked}) => checked);
 
-        if (jobIdMatches.length > 0) {
+        if (jobs.length > 0) {
             return (
                 <div className="jobsContainer">
                     {
-                        jobIdMatches.map((id, idx) => {
+                        jobs.map((job, idx) => {
                             const skillMatches = checkedSkills.filter(
-                                ({value}) => jobs[id].skills.find(jobSkill => jobSkill === value)
+                                ({value}) => job.skills.find(jobSkill => jobSkill === value)
                             );
                             const numSkillMatches = skillMatches.length;
-                            const numSkillsMissing = Math.max(jobs[id].skills.length - numSkillMatches, 0);
+                            const numSkillsMissing = Math.max(job.skills.length - numSkillMatches, 0);
                             
                             return (
-                                <React.Fragment key={id}>
+                                <React.Fragment key={job.id}>
                                     <List>
                                         <List.Item>
                                             <div className={"singleJobContainer"}>
                                                 <div>
                                                     <div className="jobTitle">
-                                                        {jobs[id].position}
+                                                        {job.position}
                                                     </div>
                                                     <List className="skillsSummary">
                                                         <List.Item>
@@ -150,8 +151,8 @@ class HomePageComponent extends React.Component<Props, State> {
                                                 </div>
                                                 <Link
                                                     className="viewJobButton" 
-                                                    to={{
-                                                        pathname: `/job/${id}`,
+                                                      to={{
+                                                        pathname: `/job/${job.id}`,
                                                         state: {skillMatches: skillMatches.map(({ value }) => value)}
                                                     }}
                                                 >
@@ -160,7 +161,7 @@ class HomePageComponent extends React.Component<Props, State> {
                                             </div>
                                         </List.Item>
                                     </List>
-                                    {idx < jobIdMatches.length - 1 ? <Divider/> : null}
+                                    {idx < jobs.length - 1 ? <Divider/> : null}
                                 </React.Fragment>
                             )
                         })
@@ -228,7 +229,7 @@ const mapStateToProps = (store: StoreState): StateProps => {
     const {jobsStore} = store;
     // TODO move skills into a reducer later
     return {
-        jobs: jobsStore,
+        jobsStore,
         skills: ['CNC Programming', 'CAD', '3D Printing', 'Teamwork', 'Problem Solving', 'Design']
     }
 }
