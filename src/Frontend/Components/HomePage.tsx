@@ -153,7 +153,10 @@ class HomePageComponent extends React.Component<Props, State> {
                                                     className="viewJobButton" 
                                                       to={{
                                                         pathname: `/job/${job.id}`,
-                                                        state: {skillMatches: skillMatches.map(({ value }) => value)}
+                                                        state: {
+                                                            job,
+                                                            skillMatches: skillMatches.map(({ value }) => value)
+                                                        }
                                                     }}
                                                 >
                                                     <Button style={{height: 40}} content={"View Job"}/>

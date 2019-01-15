@@ -8,19 +8,17 @@ import '../../Styles/JobDrillDown.css';
 import { Course } from 'src/Frontend/Reducers/coursesReducer';
 
 interface StateProps {
-    job: Job;
     courses: Course[];
 }
 
-type Props = StateProps & RouteComponentProps<{id: string}, {}, {skillMatches: string[]}>
+type Props = StateProps & RouteComponentProps<{id: string}, {}, {skillMatches: string[], job: Job}>
 
 class JobDrilldownComponent extends React.Component<Props> {
 
     renderSkillsSection = () => {
 
-        const { job, location: { state: urlState }} = this.props;
+        const { location: { state: { skillMatches = [], job } } } = this.props;
 
-        const skillMatches = urlState ? urlState.skillMatches : [];
         const skillsMissing = job.skills.filter(skill => !skillMatches.find(skillMatch => skillMatch === skill));
         return (
             <div>
@@ -69,9 +67,8 @@ class JobDrilldownComponent extends React.Component<Props> {
     }
 
     renderCoursesSection = () => {
-        const {job, location: {state: urlState}} = this.props;
+        const {location: {state: {skillMatches = [], job}}} = this.props;
 
-        const skillMatches = urlState ? urlState.skillMatches : [];
         const skillsMissing = job.skills.filter(skill => !skillMatches.find(skillMatch => skillMatch === skill));
         return (
             <div className="title">
@@ -91,7 +88,7 @@ class JobDrilldownComponent extends React.Component<Props> {
 
     render() {
 
-        const {job} = this.props;
+        const {location: {state: {job}}} = this.props;
 
         return (
             <div className="jobDrillDownContainer">
@@ -107,11 +104,10 @@ class JobDrilldownComponent extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: StoreState, ownProps: RouteComponentProps<{id: string}>): StateProps => {
-    const {jobsStore, coursesStore} = state;
-    const {match: {params: {id}}} = ownProps;
-    const job = Object.keys(jobsStore).find(zipCode => jobsStore[zipCode].find(job => job.id === id))
+    const {coursesStore} = state;
+    const { location: { state: { job } } } = ownProps;
+
     return {
-        job,
         courses: coursesStore[job.zipCode]
     }
 }

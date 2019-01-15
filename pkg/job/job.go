@@ -66,7 +66,7 @@ func (jobRouter *JobRouter) getJobs(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Panic(err)
 		}
-		jobs = append(jobs, Job{ID: ID, Position: Position, ZipCode: zipCode, Description: Description})
+		jobs = append(jobs, Job{ID: ID, Position: Position, ZipCode: zipCode, Description: Description, Skills: make([]string, 0)})
 		i++
 	}
 	err = rows.Err()
