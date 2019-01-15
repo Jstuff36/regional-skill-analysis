@@ -7,6 +7,8 @@ import '../../Styles/CourseForm.css';
 import { SkillSearchSelection } from './SkillSearchSelection';
 import { SkillCheckBoxOptions } from '../HomePage';
 import { HtmlLabelProps } from 'semantic-ui-react/dist/commonjs/generic';
+import axios from 'axios';
+import { backendBaseURL } from 'src/Frontend/EnvConstants';
 const uuidv1 = require('uuid/v1');
 
 interface StateProps {
@@ -72,14 +74,19 @@ class CourseFormComponent extends React.Component<Props, State> {
     postCourse = () => {
         const {addCourse} = this.props;
         const {name, description, zipCode, skillCheckBoxOptions} = this.state;
-        const course: Course = {
+        const newCourse: Course = {
             name,
             zipCode,
             description,
             id: uuidv1(),
             skills: skillCheckBoxOptions.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
         }
-        addCourse({course});
+        
+        axios.post<Course>(`${backendBaseURL}/api/v1/courses`, newCourse)
+            .then(resp => {
+                addCourse(resp.data)
+            })
+            .catch(err => console.log(err));
     }
 
     handleSearchSelect = (e: React.SyntheticEvent<HTMLElement>, value: string) => {
@@ -150,7 +157,7 @@ class CourseFormComponent extends React.Component<Props, State> {
                 />
                 <Form.Button
                     disabled={this.isButtonDisabled()}
-                    content={'Post Job'}
+                    content={'Post Course'}
                     onClick={this.postCourse}
                 />
             </Form>

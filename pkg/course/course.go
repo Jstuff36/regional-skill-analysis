@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -19,11 +20,11 @@ const (
 )
 
 type Course struct {
-	ID          int      `json:"id"`
-	Name        string   `json:"name"`
-	ZipCode     string   `json:"zipcode"`
-	Skills      []string `json:"skills"`
-	Description string   `json:"description,omitempty"`
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	ZipCode     string    `json:"zipcode"`
+	Skills      []string  `json:"skills"`
+	Description string    `json:"description,omitempty"`
 }
 
 func init() {
@@ -36,7 +37,7 @@ func AddRoutes(router *mux.Router) func() {
 		log.Fatal(err)
 	}
 	router.HandleFunc("/api/v1/courses/{id}", courseRouter.getCourse).Methods("GET")
-	router.HandleFunc("/api/v1/courses/{id}", courseRouter.createCourse).Methods("POST")
+	router.HandleFunc("/api/v1/courses", courseRouter.createCourse).Methods("POST")
 	router.HandleFunc("/api/v1/courses/{id}", courseRouter.deleteCourse).Methods("DELETE")
 
 	return func() {
@@ -59,14 +60,8 @@ func (courseRouter *CourseRouter) getCourse(w http.ResponseWriter, r *http.Reque
 }
 
 func (courseRouter *CourseRouter) createCourse(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
 	var course Course
 	if err := json.NewDecoder(r.Body).Decode(&course); err != nil {
-		log.Fatal(err)
-	}
-	var err error
-	course.ID, err = strconv.Atoi(params["id"])
-	if err != nil {
 		log.Fatal(err)
 	}
 	sqlStatement := `
@@ -74,7 +69,7 @@ func (courseRouter *CourseRouter) createCourse(w http.ResponseWriter, r *http.Re
 		VALUES ($1, $2, $3, $4)
 		RETURNING id
 	`
-	id := 0
+	var id uuid.UUID
 	// TODO: May be best to change this to an exec per http://go-database-sql.org/modifying.html
 	if err := courseRouter.db.QueryRow(sqlStatement, course.ID, course.Name, course.ZipCode, course.Description).Scan(&id); err != nil {
 		log.Fatal(err)
