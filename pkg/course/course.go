@@ -37,12 +37,42 @@ func AddRoutes(router *mux.Router) func() {
 		log.Fatal(err)
 	}
 	router.HandleFunc("/api/v1/courses/{id}", courseRouter.getCourse).Methods("GET")
+	router.HandleFunc("/api/v1/courses/all-by-zipcode/{zipCode}", courseRouter.getCourses).Methods("GET")
 	router.HandleFunc("/api/v1/courses", courseRouter.createCourse).Methods("POST")
 	router.HandleFunc("/api/v1/courses/{id}", courseRouter.deleteCourse).Methods("DELETE")
 
 	return func() {
 		courseRouter.close()
 	}
+}
+
+func (courseRouter *CourseRouter) getCourses(w http.ResponseWriter, r *http.Request) {
+	zipCode := mux.Vars(r)["zipCode"]
+	rows, err := courseRouter.db.Query("SELECT * FROM course WHERE zipcode = $1", zipCode)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var (
+		ID          uuid.UUID
+		Name        string
+		Description string
+	)
+	defer rows.Close()
+	courses := make([]Course, 0)
+	i := 0
+	for rows.Next() {
+		err := rows.Scan(&ID, &zipCode, &Description, &Name)
+		if err != nil {
+			log.Panic(err)
+		}
+		courses = append(courses, Course{ID: ID, Name: Name, ZipCode: zipCode, Description: Description, Skills: make([]string, 0)})
+		i++
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Panic(err)
+	}
+	json.NewEncoder(w).Encode(courses)
 }
 
 func (courseRouter *CourseRouter) getCourse(w http.ResponseWriter, r *http.Request) {

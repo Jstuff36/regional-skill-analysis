@@ -86,9 +86,10 @@ export default function jobsReducer(state: JobsStore = jobsInitialState, action:
             }
         case AddJob: 
             if (action.payload) {
+                const currentJobs = state[action.payload.zipCode] || [];
                 return {
                     ...state,
-                    [action.payload.zipCode]: [...state[action.payload.zipCode], action.payload]
+                    [action.payload.zipCode]: [...currentJobs, action.payload]
                 }
             } else {
                 return state;
