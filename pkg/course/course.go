@@ -37,7 +37,7 @@ func AddRoutes(router *mux.Router) func() {
 		log.Fatal(err)
 	}
 	router.HandleFunc("/api/v1/courses/{id}", courseRouter.getCourse).Methods("GET")
-	router.HandleFunc("/api/v1/courses/all-by-zipcode/{zipCode}", courseRouter.getCourses).Methods("GET")
+	router.HandleFunc("/api/v1/courses/all-by-zipCode/{zipCode}", courseRouter.getCourses).Methods("GET")
 	router.HandleFunc("/api/v1/courses", courseRouter.createCourse).Methods("POST")
 	router.HandleFunc("/api/v1/courses/{id}", courseRouter.deleteCourse).Methods("DELETE")
 

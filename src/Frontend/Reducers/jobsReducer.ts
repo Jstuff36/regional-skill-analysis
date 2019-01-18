@@ -54,16 +54,16 @@ const removeJob = createAction<{id: string}>(RemoveJob);
 type AddAllJobsByZipCode = 'AddAllJobsByZipCode'
 const AddAllJobsByZipCode: AddAllJobsByZipCode = 'AddAllJobsByZipCode';
 
-export interface AddAlljobsByZipCodePayload {
+export interface AddAllJobsByZipCodePayload {
     zipCode: string;
     jobs: Job[];
 }
 
-interface AddAllJobsByZipCodeAction extends Action<AddAlljobsByZipCodePayload> {
+interface AddAllJobsByZipCodeAction extends Action<AddAllJobsByZipCodePayload> {
     type: AddAllJobsByZipCode;
 }
 
-const addAllJobsByZipCode = createAction<AddAlljobsByZipCodePayload>(AddAllJobsByZipCode);
+const addAllJobsByZipCode = createAction<AddAllJobsByZipCodePayload>(AddAllJobsByZipCode);
 
 export type JobActions = AddJobAction | RemoveJobAction | AddAllJobsByZipCodeAction;
 

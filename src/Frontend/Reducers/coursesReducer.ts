@@ -30,17 +30,43 @@ interface RemoveCourseAction extends Action<{ course: Course }> {
 
 export const removeCourse = createAction<{ course: Course }>(RemoveCourse);
 
-export type CoursesActions = AddCourseAction | RemoveCourseAction;
+type AddAllCoursesByZipCode = 'addAllCoursesByZipCode';
+const AddAllCoursesByZipCode: AddAllCoursesByZipCode = 'addAllCoursesByZipCode';
+
+export interface AddAllCoursesByZipCodePayload {
+    zipCode: string;
+    courses: Course[];
+}
+
+interface AddAllCoursesByZipCodeAction extends Action<AddAllCoursesByZipCodePayload> {
+    type: AddAllCoursesByZipCode
+}
+
+export const addAllCoursesByZipCode = createAction<AddAllCoursesByZipCodePayload>(AddAllCoursesByZipCode);
+
+export type CoursesActions = AddCourseAction | RemoveCourseAction | AddAllCoursesByZipCodeAction;
 
 export const coursesActions = {
     addCourse,
-    removeCourse
+    removeCourse,
+    addAllCoursesByZipCode
 }
 
 export const coursesInitialState = {}
 
 export default function coursesReducer(state: CoursesStore = coursesInitialState, action: CoursesActions) {
     switch (action.type) {
+        case AddAllCoursesByZipCode: {
+            if (action.payload) {
+                const {courses, zipCode} = action.payload;
+                return {
+                    ...state,
+                    [zipCode]: courses
+                }
+            } else {
+                return state;
+            }
+        }
         case AddCourse: {
             if (action.payload) {
                 const course = action.payload

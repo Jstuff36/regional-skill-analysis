@@ -5,15 +5,25 @@ import { StoreState } from 'src/Frontend/Reducers/rootReducer';
 import { connect } from 'react-redux';
 import { Icon, List, Divider, Accordion } from 'semantic-ui-react';
 import '../../Styles/JobDrillDown.css';
-import { Course } from 'src/Frontend/Reducers/coursesReducer';
+import { Course, coursesActions } from 'src/Frontend/Reducers/coursesReducer';
+import axios from 'axios';
 
 interface StateProps {
     courses: Course[];
 }
 
-type Props = StateProps & RouteComponentProps<{id: string}, {}, {skillMatches: string[], job: Job}>
+type DispatchProps = typeof coursesActions;
+
+type Props = StateProps & RouteComponentProps<{ id: string }, {}, { skillMatches: string[], job: Job }> & DispatchProps;
 
 class JobDrilldownComponent extends React.Component<Props> {
+
+    componentDidMount() {
+        const {addAllCoursesByZipCode, location: {state: {job: {zipCode}}}} = this.props;
+        axios.get<Course[]>(`/api/v1/courses/all-by-zipCode/${zipCode}`)
+            .then(resp => addAllCoursesByZipCode({courses: resp.data, zipCode}))
+            .catch(err => console.log(err));
+    }
 
     renderSkillsSection = () => {
 
